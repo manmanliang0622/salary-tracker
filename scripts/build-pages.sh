@@ -4,12 +4,15 @@
 set -e
 out="${1:-_site}"
 mkdir -p "$out"
+# version marker the page compares against to reload itself after a deploy
+ver="${GITHUB_SHA:-$(git rev-parse HEAD 2>/dev/null || date +%s)}"
 {
   printf '%s\n' '<!doctype html>'
   printf '%s\n' '<html lang="zh-Hant">'
   printf '%s\n' '<head>'
   printf '%s\n' '<meta charset="utf-8">'
   printf '%s\n' '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">'
+  printf '%s\n' "<meta name=\"app-version\" content=\"$ver\">"
   printf '%s\n' '<meta name="color-scheme" content="only light">'
   printf '%s\n' '<meta name="apple-mobile-web-app-capable" content="yes">'
   printf '%s\n' '<meta name="apple-mobile-web-app-title" content="薪水本">'

@@ -639,7 +639,7 @@ function openSheet(html){
   requestAnimationFrame(()=>{sh.classList.add('open');sc.classList.add('open');const f=sh.querySelector('input,select,textarea,button:not([data-act=close])');if(f&&window.innerWidth>600)f.focus();});
 }
 function closeSheet(){
-  const sh=$('#sheet'),sc=$('#scrim');sh.classList.remove('open');sc.classList.remove('open');sheetCtx=null;
+  const sh=$('#sheet'),sc=$('#scrim');sh.classList.remove('open');sc.classList.remove('open');sheetCtx=null;reloadIfIdle();
   setTimeout(()=>{if(!sheetCtx){sh.hidden=true;sc.hidden=true;sh.innerHTML='';}},260);
 }
 // whole-day shift combinations used before, most frequent first (then most recent)
@@ -802,9 +802,22 @@ document.addEventListener('change',e=>{
   else if(/^r(Labor|Health)(Rate|Share)$/.test(t.id)){const k=t.id[1].toLowerCase()+t.id.slice(2);const v=+t.value;if(v>=0&&v<=100){S.rates={...S.rates,[k]:v};saveRates();}else toast('費率要在 0～100 之間');}
 });
 document.addEventListener('submit',e=>{if(e.target.id==='jobForm'){e.preventDefault();submitJob();}});
+// GitHub Pages build only: a home-screen app resumes without reloading, so look for a newer deploy
+// whenever it comes back to the foreground, and reload once no day/job sheet is open
+const APP_VER=(document.querySelector('meta[name="app-version"]')||{}).content;
+let newVer=null;
+async function checkUpdate(){
+  if(!APP_VER||newVer)return;
+  try{const r=await fetch(location.pathname+'?check='+Date.now(),{cache:'no-store'});if(!r.ok)return;
+    const m=(await r.text()).match(/<meta name="app-version" content="([^"]+)"/);
+    if(m&&m[1]!==APP_VER){newVer=m[1];reloadIfIdle();}}catch(e){}
+}
+// deferred so a save that follows closeSheet() (job form, delete) lands in state before the flush
+function reloadIfIdle(){if(!newVer||sheetCtx)return;setTimeout(()=>{if(sheetCtx)return;persistLocal(true);location.replace(location.pathname+'?v='+newVer.slice(0,12));},0);}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate();});
 // iOS ignores user-scalable=no; block pinch zoom directly
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheetCtx)closeSheet();});
 try{const t=localStorage.getItem('salary-tab');if(['home','cal','jobs','stats'].includes(t))S.tab=t;}catch(e){}
-init();
+init();checkUpdate();
 </script>

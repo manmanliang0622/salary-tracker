@@ -98,6 +98,15 @@ button{cursor:pointer}
 .cal{padding:10px 8px 12px}
 .calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
 .calgrid .wd{text-align:center;font-size:12px;color:var(--ink-soft);padding-bottom:2px}
+.calgrid .wd button{width:100%;min-height:28px;border:1.3px dashed var(--line);border-radius:999px;background:var(--card);color:var(--ink);font-size:12.5px;font-weight:700}
+.day.sel{box-shadow:inset 0 0 0 2.5px var(--line);background:var(--gold-soft)}
+.day.sel::after{content:"✓";position:absolute;right:3px;bottom:3px;width:18px;height:18px;border-radius:50%;background:var(--line);color:var(--card);font-size:12px;line-height:18px;text-align:center}
+.legend .multi{margin-left:auto}
+.selbar{position:fixed;left:0;right:0;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:11;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+.selbar .in{max-width:720px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 10px;background:var(--card);border:1.6px solid var(--line);border-radius:var(--r);box-shadow:2px 3px 0 var(--line)}
+.selbar .in b{font-family:var(--f-display);font-size:17px;margin-right:auto}
+.btn[disabled]{opacity:.45;cursor:default}
+.app:has(.selbar){padding-bottom:190px}
 .day{position:relative;min-height:84px;padding:4px 4px 5px;border:1.3px solid var(--line);border-radius:var(--r-sm);background:var(--card);display:flex;flex-direction:column;align-items:stretch;gap:3px;text-align:left;min-width:0;overflow:hidden}
 .day.blank{border-style:dashed;opacity:.35;background:transparent}
 .day.dbl{background:var(--gold-soft)}
@@ -557,14 +566,15 @@ function renderHome(){
 function renderCal(){
   const y=S.calY,m=S.calM,ym=`${y}-${pad(m)}`;const mo=S.months[ym];
   const first=new Date(y,m-1,1);const off=(first.getDay()+6)%7;const n=dim(y,m);
-  let cells=['一','二','三','四','五','六','日'].map(w=>`<div class="wd">${w}</div>`).join('');
+  const sel=S.sel;
+  let cells=['一','二','三','四','五','六','日'].map((w,i)=>sel?`<div class="wd"><button data-act="pick-wd" data-w="${i}" aria-label="選取這個月所有星期${w}">${w}</button></div>`:`<div class="wd">${w}</div>`).join('');
   for(let i=0;i<off;i++)cells+=`<div class="day blank" aria-hidden="true"></div>`;
   for(let d=1;d<=n;d++){
     const ds=ymd(y,m,d);const sh=(mo&&mo.days&&mo.days[ds])||{};const dbl=mo&&mo.dbl&&mo.dbl[ds];
     const list=S.jobs.filter(j=>sh[j.id]&&+sh[j.id].h>0);
     const tot=list.reduce((s,j)=>s+(+sh[j.id].h),0);
     const anyX2=list.some(j=>multOf(mo,ds,sh[j.id])===2);
-    cells+=`<button class="day${dbl?' dbl':''}${ds===TODAY?' today':''}" data-act="day" data-d="${ds}" aria-label="${m}月${d}日${tot?'，'+hrs(tot):''}${dbl?'，雙倍薪':''}">
+    cells+=`<button class="day${dbl?' dbl':''}${ds===TODAY?' today':''}${sel&&sel.has(ds)?' sel':''}" data-act="day" data-d="${ds}"${sel?` aria-pressed="${sel.has(ds)}"`:''} aria-label="${m}月${d}日${tot?'，'+hrs(tot):''}${dbl?'，雙倍薪':''}">
       <span class="dn num"><span>${d}</span>${anyX2||dbl?fishSvg():''}</span>
       <span class="tags">${list.map(j=>`<span class="tag num" style="--c:${col(j)}">${esc(j.name.slice(0,2))} ${hrs(+sh[j.id].h)}${multOf(mo,ds,sh[j.id])===2?' ×2':''}</span>`).join('')}</span>
       <span class="dots">${list.map(j=>`<i style="--c:${col(j)}"></i>`).join('')}</span>
@@ -576,7 +586,11 @@ function renderCal(){
   return `<div class="calhead"><span class="ttl num">${y} 年 ${m} 月</span><span class="nav">
       <button class="iconbtn" data-act="cal-prev" aria-label="上個月">‹</button><button class="btn sm" data-act="cal-today">今天</button><button class="iconbtn" data-act="cal-next" aria-label="下個月">›</button></span></div>
     <div class="card cal"><div class="calgrid">${cells}</div></div>
-    <div class="legend"><span>${fishSvg()}雙倍薪</span><span>點日期填時數</span></div>
+    <div class="legend"><span>${fishSvg()}雙倍薪</span><span>${sel?'點日期或上方的星期來選取':'點日期填時數'}</span>
+      ${S.jobs.length&&!sel?`<button class="btn sm ghost multi" data-act="multi">多選排班</button>`:''}</div>
+    ${sel?`<div class="selbar"><div class="in"><b class="num">已選 ${sel.size} 天</b>
+      <button class="btn sm ghost" data-act="sel-clear"${sel.size?'':' disabled'}>清除選取</button><button class="btn sm ghost" data-act="sel-cancel">取消</button>
+      <button class="btn sm gold" data-act="bulk"${sel.size?'':' disabled'}>設定時數</button></div></div>`:''}
     ${S.jobs.length?`<h2 class="h2">${m} 月小計 <small>依上班日期、未扣勞健保</small></h2>
     <div class="card sublist">${sub.map(x=>`<div class="subrow"><span class="n"><i class="dot" style="background:${col(x.j)}"></i><b>${esc(x.j.name)}</b></span><span class="num muted">${hrs(x.h)}</span><span class="m num">${money(x.g)}</span></div>`).join('')}
       <div class="subrow"><span class="n"><b>合計</b></span><span class="num muted">${hrs(sub.reduce((s,x)=>s+x.h,0))}</span><span class="m num">${money(subTot)}</span></div></div>`:`<div style="margin-top:18px">${emptyState()}</div>`}`;
@@ -704,6 +718,36 @@ function setDayDouble(ds,on){
   touchMonth(ym);refreshDay();
 }
 
+// bulk: set hours on every selected date; jobs left empty keep whatever those days already have
+function openBulk(){
+  const days=[...S.sel].sort();const presets=shiftPresets(null);
+  sheetCtx={type:'bulk',presets,wipe:false};
+  const list=days.slice(0,10).map(md).join('、')+(days.length>10?` 等 ${days.length} 天`:'');
+  const rows=S.jobs.map(j=>`<div class="shift" style="--c:${col(j)}"><span class="nm"><b>${esc(j.name)}</b><small class="num">時薪 ${money(j.wage)}</small></span>
+    <span class="stepper"><button data-act="bstep" data-j="${esc(j.id)}" data-v="-0.5" aria-label="減 0.5 小時">−</button><input id="b-${esc(j.id)}" type="number" inputmode="decimal" step="0.5" min="0" max="24" placeholder="0" aria-label="${esc(j.name)} 時數"><button data-act="bstep" data-j="${esc(j.id)}" data-v="0.5" aria-label="加 0.5 小時">+</button></span></div>`).join('');
+  openSheet(`<div class="shead"><h2 id="sheetTitle">設定 ${days.length} 天的時數</h2><button class="btn sm ghost" data-act="close">取消</button></div>
+  <div class="sbody">
+    <p class="note num">${list}</p>
+    ${presets.length?`<div class="presets"><span>常用排班：點一下帶入時數</span><div class="row">${presets.map((p,i)=>
+      `<button class="preset num" data-act="bpreset" data-k="${i}">${p.combo.map(([jid,h])=>`<i class="dot" style="background:${col(jobById(jid))}"></i>${esc(jobById(jid).name.slice(0,4))} ${hrs(h)}`).join('＋')}<small>${p.n} 次</small></button>`).join('')}</div></div>`:''}
+    ${rows}
+    <p class="note">有填時數的工作會寫進每一天；空著的工作保持原樣。雙倍薪與備註不會改動。</p>
+    <div class="sfoot"><button class="btn sm danger" data-act="bulk-wipe">清除這些天的班</button><button class="btn gold" data-act="bulk-apply">套用到 ${days.length} 天</button></div>
+  </div>`);
+}
+function applyBulk(){
+  const set=S.jobs.map(j=>{const i=document.getElementById('b-'+j.id);let h=Math.round((+(i&&i.value)||0)*100)/100;return [j.id,Math.max(0,Math.min(24,h))];}).filter(x=>x[1]>0);
+  if(!set.length){toast('先填至少一份工作的時數');return;}
+  const touched=new Set();
+  for(const ds of S.sel){const ym=ds.slice(0,7);const mo=ensureMonth(ym);mo.days=mo.days||{};const day=mo.days[ds]||(mo.days[ds]={});
+    set.forEach(([jid,h])=>{day[jid]={...(day[jid]||{}),h};});touched.add(ym);}
+  const n=S.sel.size;S.sel=null;closeSheet();touched.forEach(touchMonth);render();toast(`已加入 ${n} 天的班`);
+}
+function wipeBulk(){
+  const touched=new Set();
+  for(const ds of S.sel){const ym=ds.slice(0,7);const mo=S.months[ym];if(mo&&mo.days&&mo.days[ds]){delete mo.days[ds];touched.add(ym);}}
+  const n=S.sel.size;S.sel=null;closeSheet();touched.forEach(touchMonth);render();toast(`已清除 ${n} 天的班`);
+}
 function levelOpts(table,sel,ptMax){return table.map(v=>`<option value="${v}"${+sel===v?' selected':''}>${comma(v)}${ptMax&&v<=ptMax?'（部分工時）':''}</option>`).join('');}
 function openJob(id){
   const j=id?jobById(id):null;
@@ -764,13 +808,23 @@ function submitJob(){
 }
 
 let toastT;function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3200);}
-function setTab(t){S.tab=t;try{localStorage.setItem('salary-tab',t);}catch(e){}render();window.scrollTo(0,0);}
+function setTab(t){S.tab=t;S.sel=null;try{localStorage.setItem('salary-tab',t);}catch(e){}render();window.scrollTo(0,0);}
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
   switch(a){
     case 'tab':setTab(b.dataset.tab);break;
-    case 'day':openDay(b.dataset.d);break;
+    case 'day':if(S.sel&&S.tab==='cal'){const ds=b.dataset.d;S.sel.has(ds)?S.sel.delete(ds):S.sel.add(ds);render();}else openDay(b.dataset.d);break;
+    case 'multi':S.sel=new Set();render();break;
+    case 'sel-cancel':S.sel=null;render();break;
+    case 'sel-clear':S.sel.clear();render();break;
+    case 'pick-wd':{const w=+b.dataset.w,days=[];for(let d=1;d<=dim(S.calY,S.calM);d++)if((new Date(S.calY,S.calM-1,d).getDay()+6)%7===w)days.push(ymd(S.calY,S.calM,d));
+      const all=days.every(ds=>S.sel.has(ds));days.forEach(ds=>all?S.sel.delete(ds):S.sel.add(ds));render();break;}
+    case 'bulk':if(S.sel&&S.sel.size)openBulk();break;
+    case 'bstep':{const i=document.getElementById('b-'+b.dataset.j);if(i)i.value=Math.max(0,Math.min(24,(+i.value||0)+ +b.dataset.v))||'';break;}
+    case 'bpreset':{const p=sheetCtx.presets[+b.dataset.k];if(p)S.jobs.forEach(j=>{const i=document.getElementById('b-'+j.id);const c=p.combo.find(x=>x[0]===j.id);if(i)i.value=c?c[1]:'';});break;}
+    case 'bulk-apply':applyBulk();break;
+    case 'bulk-wipe':if(!sheetCtx.wipe){sheetCtx.wipe=true;b.textContent=`確定清除 ${S.sel.size} 天的班？`;}else wipeBulk();break;
     case 'close':closeSheet();break;
     case 'cal-prev':[S.calY,S.calM]=addMonth(S.calY,S.calM,-1);render();break;
     case 'cal-next':[S.calY,S.calM]=addMonth(S.calY,S.calM,1);render();break;

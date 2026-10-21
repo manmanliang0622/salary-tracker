@@ -26,6 +26,12 @@
 
 - [ ] 5.1 用 `openspec validate add-salary-tracker` 確認文件有效，發佈 Artifact 並在預覽中檢查一次版面（桌機／手機、淺色／深色）
 
+## 6. GitHub Pages 與本機保存
+
+- [x] 6.1 在沒有 `window.claude` 時以 `localStorage` 保存與讀回資料，不能保存時退回預覽模式，工作頁註明資料只在此瀏覽器
+- [x] 6.2 新增 `scripts/build-pages.sh` 與 `.github/workflows/pages.yml`，推送 `main` 時自動部署到 GitHub Pages
+- [ ] 6.3 在手機開啟 Pages 網址，新增工作與排班後重新開啟，確認資料還在、版面正常
+
 ## Workflow follow-up
 
 - 使用者確認上線後，執行 `openspec archive add-salary-tracker` 把規格併入 `openspec/specs/`。

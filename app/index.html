@@ -400,7 +400,17 @@ async function write(fn){
   try{return await fn();}
   catch(e){const c=e&&e.code;if(c&&c!=='unavailable'&&c!=='resource_exhausted')throw e;await wait(1200+Math.random()*1500);return await fn();}
 }
-function touchMonth(ym){if(!canWrite())return;dirty.add(ym);clearTimeout(flushTimer);flushTimer=setTimeout(flush,600);}
+// outside claude.ai there is no cloud store: keep everything in this browser instead
+const LS_KEY='salary-data-v1';let localT=null;
+function persistLocal(now){
+  if(S.mode!=='local')return;clearTimeout(localT);
+  const save=()=>{try{const months={};for(const ym in S.months)months[ym]=cleanMonth(S.months[ym]);
+    localStorage.setItem(LS_KEY,JSON.stringify({v:1,jobs:S.jobs,months,rates:S.rates}));}
+    catch(e){toast('沒有存到：瀏覽器不讓這一頁保存資料。關掉私密瀏覽，或清出一些空間再試。');}};
+  if(now)save();else localT=setTimeout(save,300);
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&localT)persistLocal(true);});
+function touchMonth(ym){if(S.mode==='local'){persistLocal();return;}if(!canWrite())return;dirty.add(ym);clearTimeout(flushTimer);flushTimer=setTimeout(flush,600);}
 async function flush(){
   if(flushing)return;flushing=true;
   try{
@@ -424,9 +434,9 @@ function saveError(e){
         c==='resource_exhausted'?'沒有存到：改得太快了，停一下再改一次就會重新儲存。':
         '沒有存到：連線不穩，等一下再改一次就會重新儲存。');
 }
-async function saveJob(job){S.jobs=S.jobs.filter(j=>j.id!==job.id).concat(job).sort(byCreated);render();if(canWrite()){try{await write(()=>store.jobsCol.doc(job.id).set(job));}catch(e){saveError(e);}}}
-async function removeJob(id){S.jobs=S.jobs.filter(j=>j.id!==id);render();if(canWrite()){try{await write(()=>store.jobsCol.doc(id).delete());}catch(e){saveError(e);}}}
-async function saveRates(){render();if(canWrite()){try{await write(()=>store.settingsDoc.set({...S.rates}));}catch(e){saveError(e);}}}
+async function saveJob(job){S.jobs=S.jobs.filter(j=>j.id!==job.id).concat(job).sort(byCreated);render();persistLocal();if(canWrite()){try{await write(()=>store.jobsCol.doc(job.id).set(job));}catch(e){saveError(e);}}}
+async function removeJob(id){S.jobs=S.jobs.filter(j=>j.id!==id);render();persistLocal();if(canWrite()){try{await write(()=>store.jobsCol.doc(id).delete());}catch(e){saveError(e);}}}
+async function saveRates(){render();persistLocal();if(canWrite()){try{await write(()=>store.settingsDoc.set({...S.rates}));}catch(e){saveError(e);}}}
 const byCreated=(a,b)=>(a.created||0)-(b.created||0);
 
 function sampleData(){
@@ -458,17 +468,26 @@ async function loadSample(){
   S.jobs=S.jobs.concat(jobs).sort(byCreated);
   for(const ym in months){const cur=ensureMonth(ym);for(const ds in months[ym].days)cur.days[ds]={...(cur.days[ds]||{}),...months[ym].days[ds]};Object.assign(cur.dbl,months[ym].dbl);Object.assign(cur.note,months[ym].note);}
   render();
+  if(S.mode==='local'){persistLocal(true);toast('放好範例了，之後可以在「工作」頁刪掉');return;}
   if(canWrite()){try{for(const j of jobs)await write(()=>store.jobsCol.doc(j.id).set(j));for(const ym in months)touchMonth(ym);toast('放好範例了，之後可以在「工作」頁刪掉');}catch(e){saveError(e);}}
 }
-function enterDemo(){
+function enterDemo(msg){
   const {jobs,months}=sampleData();S.jobs=jobs;S.months=months;S.mode='demo';
-  const b=$('#banner');b.hidden=false;b.textContent='預覽模式：這是範例資料，改動不會保存。在 claude.ai 登入後開啟這一頁，就能記錄自己的薪水。';
+  const b=$('#banner');b.hidden=false;b.textContent=msg||'預覽模式：這是範例資料，改動不會保存。在 claude.ai 登入後開啟這一頁，就能記錄自己的薪水。';
+  render();
+}
+function enterLocal(){
+  let data;
+  try{localStorage.setItem(LS_KEY+'-test','1');localStorage.removeItem(LS_KEY+'-test');data=JSON.parse(localStorage.getItem(LS_KEY)||'{}')||{};}
+  catch(e){enterDemo('預覽模式：這個瀏覽器不讓網頁保存資料（可能是私密瀏覽），改動不會保存。');return;}
+  S.mode='local';S.jobs=(Array.isArray(data.jobs)?data.jobs:[]).sort(byCreated);
+  S.months=data.months&&typeof data.months==='object'?data.months:{};S.rates={...DEF_RATES,...(data.rates||{})};
   render();
 }
 async function init(){
   render();
   const c=window.claude;
-  if(!c||!c.use){enterDemo();return;}
+  if(!c||!c.use){enterLocal();return;}
   let db=null,user=null;
   try{[db,user]=await Promise.all([c.use('db'),c.use('user')]);}catch(e){}
   const uid=user?await user.id():null;
@@ -576,7 +595,8 @@ function renderJobs(){
     <span class="info"><b>${esc(j.name)}</b><small class="num">時薪 ${money(j.wage)} · ${cycleText(j)} · ${payText(j)}</small><small>${insText(j)}</small></span>
     <button class="btn sm" data-act="job-edit" data-j="${esc(j.id)}">編輯</button></div>`).join('')}
     <button class="addjob" data-act="job-new">＋ 新增工作</button>
-    ${S.jobs.length?'':`<button class="btn ghost" data-act="sample">放入範例資料</button>`}</div>`;
+    ${S.jobs.length?'':`<button class="btn ghost" data-act="sample">放入範例資料</button>`}</div>
+  ${S.mode==='local'?`<p class="note" style="margin-top:16px">資料只存在這個瀏覽器裡：換手機、換瀏覽器或清除網站資料後就看不到了。</p>`:''}`;
 }
 function niceMax(v){if(v<=0)return 10000;const p=Math.pow(10,Math.floor(Math.log10(v)));const s=p/2;return Math.ceil(v/s)*s;}
 const short=n=>n>=10000?(Math.round(n/1000)/10)+'萬':comma(n);

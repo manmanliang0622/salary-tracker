@@ -53,11 +53,15 @@
 同一份 `app/index.html` 也發佈到 GitHub Pages，讓不使用 claude.ai 連結的人也能在手機上開。偵測不到 `window.claude` 時改用 `localStorage`（鍵 `salary-data-v1`，內容 `{v, jobs, months, rates}`），修改後 300ms 去抖動寫入，頁面隱藏時立即寫入。頁面原本依賴 Artifact 外框提供 doctype、viewport 與重設樣式，所以由 `scripts/build-pages.sh` 包上完整 HTML，GitHub Actions 在每次推送 `main` 時建置並部署。
 - 替代方案：直接把 `app/index.html` 改成完整文件 — 會和 Artifact 發佈時加上的外框重疊。
 
+### 8. 常用排班與手機縮放
+常用排班在打開當天面板時，從所有月份即時統計「工作＋時數」的整天組合，不另外存資料，刪除的工作自動排除。主畫面開啟時不允許縮放：Pages 的 viewport 設 `maximum-scale=1, user-scalable=no`；iOS 會忽略這個設定，所以另外攔截 `gesturestart`，加上 `touch-action: manipulation` 停用雙擊縮放，輸入框字級 16px 避免 iOS 聚焦時自動放大。
+
 ## Risks / Trade-offs
 
 - [級距表或費率過時] → 費率可在統計頁修改；級距可改為固定並自選；文件標註需每年檢查。
 - [自動級距與實際申報不同] → 提供固定級距選項，畫面註明以薪資單為準。
 - [兩台裝置同時編輯同一個月] → 最後寫入者為準；個人使用情境下可接受。
+- [停用縮放影響需要放大閱讀的人] → 使用者明確要求；字級維持 13px 以上。
 - [本機資料只在單一瀏覽器] → 工作頁註明；換裝置或清除網站資料會遺失。
 - [刪除工作後舊排班仍留在月文件] → 計算時忽略不存在的工作；資料量很小，不另外清理。
 

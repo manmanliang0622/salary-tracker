@@ -32,6 +32,12 @@
 - [x] 6.2 新增 `scripts/build-pages.sh` 與 `.github/workflows/pages.yml`，推送 `main` 時自動部署到 GitHub Pages
 - [ ] 6.3 在手機開啟 Pages 網址，新增工作與排班後重新開啟，確認資料還在、版面正常
 
+## 7. 常用排班與停用縮放
+
+- [x] 7.1 當天面板加入常用排班（整天組合、依次數與時間排序、最多 6 個），點選後取代當天時數
+- [x] 7.2 停用縮放：viewport 限制、攔截 iOS 手勢、停用雙擊縮放、輸入框 16px
+- [ ] 7.3 在手機主畫面開啟，確認無法縮放、點輸入框不會放大，常用排班可正常套用
+
 ## Workflow follow-up
 
 - 使用者確認上線後，執行 `openspec archive add-salary-tracker` 把規格併入 `openspec/specs/`。

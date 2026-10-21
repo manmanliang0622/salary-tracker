@@ -20,6 +20,8 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cg fill='black'%3E%3Cellipse cx='32' cy='40' rx='9' ry='7.5'/%3E%3Ccircle cx='21' cy='29' r='3.8'/%3E%3Ccircle cx='29' cy='24' r='3.8'/%3E%3Ccircle cx='38' cy='25' r='3.8'/%3E%3Ccircle cx='44' cy='32' r='3.5'/%3E%3Cellipse cx='108' cy='112' rx='9' ry='7.5'/%3E%3Ccircle cx='97' cy='101' r='3.8'/%3E%3Ccircle cx='105' cy='96' r='3.8'/%3E%3Ccircle cx='114' cy='97' r='3.8'/%3E%3Ccircle cx='120' cy='104' r='3.5'/%3E%3C/g%3E%3C/svg%3E") 0 0/150px 150px repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cg fill='black'%3E%3Cellipse cx='32' cy='40' rx='9' ry='7.5'/%3E%3Ccircle cx='21' cy='29' r='3.8'/%3E%3Ccircle cx='29' cy='24' r='3.8'/%3E%3Ccircle cx='38' cy='25' r='3.8'/%3E%3Ccircle cx='44' cy='32' r='3.5'/%3E%3Cellipse cx='108' cy='112' rx='9' ry='7.5'/%3E%3Ccircle cx='97' cy='101' r='3.8'/%3E%3Ccircle cx='105' cy='96' r='3.8'/%3E%3Ccircle cx='114' cy='97' r='3.8'/%3E%3Ccircle cx='120' cy='104' r='3.5'/%3E%3C/g%3E%3C/svg%3E") 0 0/150px 150px repeat}
 button,input,select,textarea{font:inherit;color:inherit}
+html{touch-action:manipulation}
+input,select,textarea{font-size:16px}
 button{cursor:pointer}
 :focus-visible{outline:2.5px dashed var(--gold);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
@@ -200,6 +202,12 @@ textarea.inp{min-height:64px;resize:vertical}
 .stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .x2{min-width:44px;height:34px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);font-family:var(--f-display);font-weight:700;font-size:15px}
 .x2[aria-pressed="true"]{background:var(--gold);color:#3B2C1F}
+.presets{display:grid;gap:6px}
+.presets>span{font-size:13px;color:var(--ink-soft)}
+.presets .row{display:flex;flex-wrap:wrap;gap:8px}
+.preset{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:4px 12px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);box-shadow:1.5px 1.5px 0 var(--line);font-size:14px}
+.preset:active{transform:translate(1.5px,1.5px);box-shadow:none}
+.preset small{color:var(--ink-soft);font-size:11.5px}
 .daytotal{display:flex;justify-content:space-between;align-items:baseline;padding:4px 4px 0;font-size:14px}
 .daytotal b{font-family:var(--f-display);font-size:24px}
 .confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 12px;border:1.5px dashed var(--danger);border-radius:var(--r);color:var(--danger)}
@@ -634,8 +642,27 @@ function closeSheet(){
   const sh=$('#sheet'),sc=$('#scrim');sh.classList.remove('open');sc.classList.remove('open');sheetCtx=null;
   setTimeout(()=>{if(!sheetCtx){sh.hidden=true;sc.hidden=true;sh.innerHTML='';}},260);
 }
+// whole-day shift combinations used before, most frequent first (then most recent)
+function shiftPresets(exceptDs){
+  const seen={};
+  for(const ym in S.months){const days=(S.months[ym]&&S.months[ym].days)||{};
+    for(const ds in days){if(ds===exceptDs)continue;
+      const combo=S.jobs.filter(j=>days[ds][j.id]&&+days[ds][j.id].h>0).map(j=>[j.id,+days[ds][j.id].h]);
+      if(!combo.length)continue;const k=combo.map(c=>c.join(':')).join('|');
+      const p=seen[k]||(seen[k]={combo,n:0,last:''});p.n++;if(ds>p.last)p.last=ds;}}
+  return Object.values(seen).sort((a,b)=>b.n-a.n||(a.last<b.last?1:-1)).slice(0,6);
+}
+function applyPreset(ds,combo){
+  const ym=ds.slice(0,7);const mo=ensureMonth(ym);mo.days=mo.days||{};
+  const day={};combo.forEach(([jid,h])=>day[jid]={h});mo.days[ds]=day;
+  S.jobs.forEach(j=>{const i=document.getElementById('h-'+j.id);if(i)i.value=day[j.id]?day[j.id].h:'';});
+  touchMonth(ym);refreshDay();
+}
 function openDay(ds){
-  sheetCtx={type:'day',ds};const d=dObj(ds);const mo=monthOf(ds);const dbl=!!(mo&&mo.dbl&&mo.dbl[ds]);
+  const presets=shiftPresets(ds);
+  sheetCtx={type:'day',ds,presets};const d=dObj(ds);const mo=monthOf(ds);const dbl=!!(mo&&mo.dbl&&mo.dbl[ds]);
+  const presetHtml=presets.length?`<div class="presets"><span>常用排班：點一下套用到這天（會取代這天的時數）</span><div class="row">${presets.map((p,i)=>
+    `<button class="preset num" data-act="preset" data-k="${i}">${p.combo.map(([jid,h])=>`<i class="dot" style="background:${col(jobById(jid))}"></i>${esc(jobById(jid).name.slice(0,4))} ${hrs(h)}`).join('＋')}<small>${p.n} 次</small></button>`).join('')}</div></div>`:'';
   const rows=S.jobs.map(j=>{const s=(mo&&mo.days&&mo.days[ds]&&mo.days[ds][j.id])||{};const x2=multOf(mo,ds,s)===2;
     return `<div class="shift" style="--c:${col(j)}"><span class="nm"><b>${esc(j.name)}</b><small class="num">時薪 ${money(j.wage)}</small></span>
     <span class="stepper"><button data-act="step" data-j="${esc(j.id)}" data-v="-0.5" aria-label="減 0.5 小時">−</button><input id="h-${esc(j.id)}" data-j="${esc(j.id)}" type="number" inputmode="decimal" step="0.5" min="0" max="24" value="${+s.h||''}" placeholder="0" aria-label="${esc(j.name)} 時數"><button data-act="step" data-j="${esc(j.id)}" data-v="0.5" aria-label="加 0.5 小時">+</button></span>
@@ -643,6 +670,7 @@ function openDay(ds){
   openSheet(`<div class="shead"><h2 id="sheetTitle">${d.getMonth()+1} 月 ${d.getDate()} 日（${WD[d.getDay()]}）</h2><button class="btn sm gold" data-act="close">完成</button></div>
   <div class="sbody">
     <label class="dblday${dbl?' on':''}" id="dblWrap"><input type="checkbox" id="dblDay" ${dbl?'checked':''}>${fishSvg()}<span><b>整天雙倍薪</b><br><small class="muted">國定假日、特休加班等。也可以只把某一班設 ×2。</small></span></label>
+    ${presetHtml}
     ${S.jobs.length?rows:`<div class="card empty"><p>還沒有工作，先新增一份吧。</p><button class="btn gold" data-act="job-new">新增工作</button></div>`}
     <label class="field"><span>備註</span><textarea class="inp" id="dayNote" maxlength="500" placeholder="例如：代班、提早下班">${esc((mo&&mo.note&&mo.note[ds])||'')}</textarea></label>
     <div class="daytotal"><span class="muted">這天收入（未扣勞健保）</span><b class="num" id="dayTotal">${money(dayEarn(ds))}</b></div>
@@ -751,6 +779,7 @@ document.addEventListener('click',e=>{
     case 'year-next':S.statY++;render();break;
     case 'step':{const ds=sheetCtx.ds,j=b.dataset.j;const mo=monthOf(ds);const cur=+(mo&&mo.days&&mo.days[ds]&&mo.days[ds][j]&&mo.days[ds][j].h)||0;setHours(ds,j,cur+ +b.dataset.v,true);break;}
     case 'x2':toggleX2(sheetCtx.ds,b.dataset.j);break;
+    case 'preset':{const p=sheetCtx.presets[+b.dataset.k];if(p){applyPreset(sheetCtx.ds,p.combo);toast('已套用常用排班');}break;}
     case 'job-new':openJob(null);break;
     case 'job-edit':openJob(b.dataset.j);break;
     case 'job-del':$('#delBox').innerHTML=`<div class="confirm"><span>刪除後，這份工作的排班也不會再計算。</span><button type="button" class="btn sm danger" data-act="job-del-yes">確定刪除</button><button type="button" class="btn sm" data-act="job-del-no">先不要</button></div>`;break;
@@ -773,6 +802,8 @@ document.addEventListener('change',e=>{
   else if(/^r(Labor|Health)(Rate|Share)$/.test(t.id)){const k=t.id[1].toLowerCase()+t.id.slice(2);const v=+t.value;if(v>=0&&v<=100){S.rates={...S.rates,[k]:v};saveRates();}else toast('費率要在 0～100 之間');}
 });
 document.addEventListener('submit',e=>{if(e.target.id==='jobForm'){e.preventDefault();submitJob();}});
+// iOS ignores user-scalable=no; block pinch zoom directly
+document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheetCtx)closeSheet();});
 try{const t=localStorage.getItem('salary-tab');if(['home','cal','jobs','stats'].includes(t))S.tab=t;}catch(e){}
 init();

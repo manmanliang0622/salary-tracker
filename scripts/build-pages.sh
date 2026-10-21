@@ -9,7 +9,7 @@ mkdir -p "$out"
   printf '%s\n' '<html lang="zh-Hant">'
   printf '%s\n' '<head>'
   printf '%s\n' '<meta charset="utf-8">'
-  printf '%s\n' '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
+  printf '%s\n' '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">'
   printf '%s\n' '<meta name="color-scheme" content="only light">'
   printf '%s\n' '<meta name="apple-mobile-web-app-capable" content="yes">'
   printf '%s\n' '<meta name="apple-mobile-web-app-title" content="薪水本">'

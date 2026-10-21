@@ -1,0 +1,772 @@
+<title>打工薪水本</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: phone-first single column notebook, sticker cards with ink outlines, fixed bottom tab bar. */
+:root{
+  --paper:#FBF4E4; --card:#FFFCF3; --ink:#4B3B2F; --ink-soft:#8B7866; --line:#4B3B2F;
+  --gold:#E8AE3F; --gold-soft:#F8E4B4; --kraft:#C99C64; --pup:#C08C5E; --paw:#EFE2C6;
+  --danger:#C2554B; --ok:#4F9160; --scrim:rgba(75,59,47,.32);
+  --p1:#F8D7D7; --p2:#D6E8F6; --p3:#DCEFD3; --p4:#FBEAB8; --p5:#E6DCF4; --p6:#FADCC4;
+  --f-display:"LXGW WenKai TC","Kaiti TC","STKaiti","BiauKai",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --r:14px 17px 13px 16px; --r-sm:9px 11px 8px 10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#2A221C; --card:#352B23; --ink:#F2E5CE; --ink-soft:#BBA78E; --line:#E6D3B4;
+  --gold:#F0BB55; --gold-soft:#5C4524; --kraft:#9F7A4C; --pup:#A97B52; --paw:#33291F;
+  --danger:#EE8A7D; --ok:#8CCB97; --scrim:rgba(0,0,0,.5);
+  --p1:#5E3F45; --p2:#33485A; --p3:#3C5039; --p4:#5B4D27; --p5:#4A3F5E; --p6:#5E4532;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#2A221C; --card:#352B23; --ink:#F2E5CE; --ink-soft:#BBA78E; --line:#E6D3B4;
+  --gold:#F0BB55; --gold-soft:#5C4524; --kraft:#9F7A4C; --pup:#A97B52; --paw:#33291F;
+  --danger:#EE8A7D; --ok:#8CCB97; --scrim:rgba(0,0,0,.5);
+  --p1:#5E3F45; --p2:#33485A; --p3:#3C5039; --p4:#5B4D27; --p5:#4A3F5E; --p6:#5E4532;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--paw);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cg fill='black'%3E%3Cellipse cx='32' cy='40' rx='9' ry='7.5'/%3E%3Ccircle cx='21' cy='29' r='3.8'/%3E%3Ccircle cx='29' cy='24' r='3.8'/%3E%3Ccircle cx='38' cy='25' r='3.8'/%3E%3Ccircle cx='44' cy='32' r='3.5'/%3E%3Cellipse cx='108' cy='112' rx='9' ry='7.5'/%3E%3Ccircle cx='97' cy='101' r='3.8'/%3E%3Ccircle cx='105' cy='96' r='3.8'/%3E%3Ccircle cx='114' cy='97' r='3.8'/%3E%3Ccircle cx='120' cy='104' r='3.5'/%3E%3C/g%3E%3C/svg%3E") 0 0/150px 150px repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cg fill='black'%3E%3Cellipse cx='32' cy='40' rx='9' ry='7.5'/%3E%3Ccircle cx='21' cy='29' r='3.8'/%3E%3Ccircle cx='29' cy='24' r='3.8'/%3E%3Ccircle cx='38' cy='25' r='3.8'/%3E%3Ccircle cx='44' cy='32' r='3.5'/%3E%3Cellipse cx='108' cy='112' rx='9' ry='7.5'/%3E%3Ccircle cx='97' cy='101' r='3.8'/%3E%3Ccircle cx='105' cy='96' r='3.8'/%3E%3Ccircle cx='114' cy='97' r='3.8'/%3E%3Ccircle cx='120' cy='104' r='3.5'/%3E%3C/g%3E%3C/svg%3E") 0 0/150px 150px repeat}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2.5px dashed var(--gold);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.disp{font-family:var(--f-display)}
+
+.app{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:20px 120px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px}
+.top .date{font-size:13px;color:var(--ink-soft);letter-spacing:.06em}
+.top h1{margin:0;font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1.2;display:flex;align-items:center;gap:8px;text-wrap:balance}
+.top h1 svg{width:44px;height:26px}
+.banner{border:1.6px dashed var(--line);border-radius:var(--r);background:var(--gold-soft);padding:10px 14px;font-size:13.5px;margin-bottom:16px}
+
+.card{background:var(--card);border:1.6px solid var(--line);border-radius:var(--r);box-shadow:2px 3px 0 var(--line)}
+.h2{font-family:var(--f-display);font-size:20px;font-weight:700;margin:26px 0 12px;display:flex;align-items:center;gap:8px}
+.h2 small{font-family:var(--f-body);font-size:12.5px;font-weight:400;color:var(--ink-soft)}
+.muted{color:var(--ink-soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:6px 16px;border:1.6px solid var(--line);border-radius:999px;background:var(--card);box-shadow:2px 2px 0 var(--line);font-family:var(--f-display);font-size:16px;font-weight:700;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--line)}
+.btn.gold{background:var(--gold-soft)}
+.btn.ghost{box-shadow:none;border-style:dashed}
+.btn.danger{color:var(--danger);border-color:var(--danger);box-shadow:2px 2px 0 var(--danger)}
+.btn.sm{min-height:32px;padding:3px 12px;font-size:14px}
+.iconbtn{width:38px;height:38px;border:1.6px solid var(--line);border-radius:50%;background:var(--card);display:inline-grid;place-items:center;font-size:18px;line-height:1}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:1px 9px;border:1.3px solid var(--line);border-radius:999px;font-size:12px;white-space:nowrap}
+.pill.ok{color:var(--ok);border-color:var(--ok)}
+.pill.wait{background:var(--gold-soft)}
+.dot{width:10px;height:10px;border-radius:50%;border:1.3px solid var(--line);display:inline-block;flex:none}
+
+/* home */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:18px}
+.wk{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0}
+.wk .lb{font-size:12px;color:var(--ink-soft)}
+.wk.today .lb{color:var(--ink);font-weight:700}
+.wk .cir{width:min(44px,11vw);aspect-ratio:1;max-width:100%;border:1.6px solid var(--line);border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:500;
+  background:linear-gradient(to top,var(--gold) var(--f),var(--card) var(--f))}
+.wk.today .cir{box-shadow:0 0 0 3px var(--paper),0 0 0 4.6px var(--line)}
+.wk .mk{height:12px;display:flex;align-items:center}
+.wk .mk svg{width:20px;height:11px}
+.hero{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;padding:18px 18px 12px;position:relative;overflow:hidden}
+.hero .eyebrow{margin:0;font-size:14px;color:var(--ink-soft);letter-spacing:.04em}
+.hero .big{margin:2px 0 4px;font-family:var(--f-display);font-size:clamp(38px,11vw,54px);font-weight:700;line-height:1.05}
+.hero .sub{margin:0 0 6px;font-size:13.5px}
+.hero .cat{width:clamp(96px,26vw,128px);height:auto;margin-bottom:-14px}
+.paylist{margin-top:12px;display:grid;gap:0}
+.payrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 2px;border-top:1.3px dashed var(--line)}
+.payrow:first-child{border-top:0}
+.payrow .when{font-family:var(--f-display);font-size:17px;font-weight:700;min-width:44px}
+.payrow .who{min-width:0}
+.payrow .who b{font-weight:500;display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.payrow .who small{color:var(--ink-soft);font-size:12px}
+.payrow .amt{text-align:right;font-family:var(--f-display);font-size:18px;font-weight:700}
+.payrow .amt .pill{font-family:var(--f-body);font-weight:400;margin-top:2px}
+.jobgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.jcard{padding:14px 14px 12px;background:var(--c,var(--card));display:flex;flex-direction:column;gap:6px;min-width:0}
+.jcard .nm{font-family:var(--f-display);font-size:19px;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.jcard .rate{font-size:12.5px;color:var(--ink-soft)}
+.jcard .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px}
+.jcard .money{font-family:var(--f-display);font-size:26px;font-weight:700;line-height:1.1}
+.jcard hr{border:0;border-top:1.3px dashed var(--line);margin:4px 0;width:100%}
+.tip{display:flex;align-items:flex-end;gap:12px;margin-top:28px;justify-content:center}
+.tip p{margin:0 0 14px;font-size:13px;color:var(--ink-soft);text-align:center;max-width:24em}
+.tip .pup{width:92px;flex:none}
+.bubble{display:inline-block;font-family:var(--f-display);font-size:15px;border:1.6px solid var(--line);border-radius:50%;padding:4px 14px;background:var(--card);color:var(--ink);margin-bottom:6px}
+.empty{padding:26px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.empty svg.cat{width:120px}
+.empty h3{margin:0;font-family:var(--f-display);font-size:22px}
+.empty p{margin:0;color:var(--ink-soft);max-width:26em}
+.empty .acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+
+/* calendar */
+.calhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.calhead .ttl{font-family:var(--f-display);font-size:24px;font-weight:700}
+.calhead .nav{display:flex;gap:8px;align-items:center}
+.cal{padding:10px 8px 12px}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.calgrid .wd{text-align:center;font-size:12px;color:var(--ink-soft);padding-bottom:2px}
+.day{position:relative;min-height:84px;padding:4px 4px 5px;border:1.3px solid var(--line);border-radius:var(--r-sm);background:var(--card);display:flex;flex-direction:column;align-items:stretch;gap:3px;text-align:left;min-width:0;overflow:hidden}
+.day.blank{border-style:dashed;opacity:.35;background:transparent}
+.day.dbl{background:var(--gold-soft)}
+.day.today{box-shadow:inset 0 0 0 2px var(--gold)}
+.day .dn{font-size:13px;font-weight:700;line-height:1.2;display:flex;justify-content:space-between;align-items:center}
+.day.today .dn span{background:var(--line);color:var(--card);border-radius:999px;padding:0 6px}
+.day .dn svg{width:22px;height:12px}
+.day .tags{display:flex;flex-direction:column;gap:2px}
+.day .tag{display:block;font-size:11px;line-height:1.35;padding:0 4px;border-radius:5px;background:var(--c);border:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day .dots{display:none;gap:3px;flex-wrap:wrap}
+.day .dots i{width:8px;height:8px;border-radius:50%;background:var(--c);border:1px solid var(--line)}
+.day .tot{display:none;font-size:11px;font-weight:700;margin-top:auto}
+@media (max-width:540px){
+  .day{min-height:62px;padding:3px}
+  .day .tags{display:none}
+  .day .dots{display:flex}
+  .day .tot{display:block}
+  .day .dn svg{width:16px;height:9px}
+}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:12.5px;color:var(--ink-soft)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend svg{width:22px;height:12px}
+.sublist{padding:4px 14px}
+.subrow{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:10px 0;border-top:1.3px dashed var(--line)}
+.subrow:first-child{border-top:0}
+.subrow .n{display:flex;align-items:center;gap:8px;min-width:0}
+.subrow .n b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.subrow .m{font-family:var(--f-display);font-size:17px;font-weight:700;text-align:right}
+
+/* jobs */
+.joblist{display:grid;gap:14px}
+.jrow{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 14px}
+.jrow .sw{width:44px;height:44px;border-radius:12px 14px 11px 13px;border:1.6px solid var(--line);background:var(--c);display:grid;place-items:center}
+.jrow .sw svg{width:30px;height:17px}
+.jrow .info{min-width:0}
+.jrow .info b{font-family:var(--f-display);font-size:18px;display:block;overflow-wrap:anywhere}
+.jrow .info small{display:block;color:var(--ink-soft);font-size:12.5px}
+.addjob{width:100%;min-height:56px;border:1.8px dashed var(--line);border-radius:var(--r);background:transparent;font-family:var(--f-display);font-size:18px;font-weight:700}
+
+/* stats */
+.yearbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.yearbar .ttl{font-family:var(--f-display);font-size:24px;font-weight:700}
+.yearsum{padding:16px 18px;display:grid;gap:10px}
+.yearsum .big{font-family:var(--f-display);font-size:clamp(32px,9vw,44px);font-weight:700;line-height:1.1}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border:1.3px solid var(--line);border-radius:999px;background:var(--c,var(--card));font-size:13px}
+.chip b{font-family:var(--f-display);font-size:15px}
+.chart{padding:12px 10px 6px}
+.chart svg{display:block;width:100%;height:auto}
+.tblwrap{overflow-x:auto;padding:4px 0}
+table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:8px 10px;text-align:right;border-bottom:1.2px dashed var(--line)}
+th{font-weight:500;color:var(--ink-soft);font-size:12px}
+th:first-child,td:first-child{text-align:left}
+tfoot td{border-bottom:0;border-top:1.6px solid var(--line);font-weight:700}
+td.net{font-family:var(--f-display);font-weight:700;font-size:15px}
+.jobtbl{margin-bottom:14px}
+.jobtbl .hd{display:flex;align-items:center;gap:8px;padding:12px 14px 4px;font-family:var(--f-display);font-size:18px;font-weight:700}
+.rates{padding:14px 16px;display:grid;gap:10px}
+.rates .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.note{font-size:12.5px;color:var(--ink-soft);margin:0}
+
+/* forms */
+.field{display:grid;gap:4px}
+.field>span{font-size:13px;color:var(--ink-soft)}
+.inp{width:100%;min-height:40px;padding:6px 12px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--card)}
+textarea.inp{min-height:64px;resize:vertical}
+.err{color:var(--danger);font-size:12.5px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.colors{display:flex;flex-wrap:wrap;gap:8px}
+.colors label{position:relative}
+.colors input{position:absolute;opacity:0;inset:0}
+.colors span{display:block;width:34px;height:34px;border-radius:50%;border:1.6px solid var(--line);background:var(--c)}
+.colors input:checked+span{box-shadow:0 0 0 3px var(--card),0 0 0 4.8px var(--line)}
+.colors input:focus-visible+span{outline:2.5px dashed var(--gold);outline-offset:4px}
+.ins{border:1.5px dashed var(--line);border-radius:var(--r);padding:12px;display:grid;gap:10px}
+.switch{display:flex;align-items:center;gap:10px;font-weight:500}
+.switch input{width:20px;height:20px;accent-color:var(--gold)}
+.preview{font-size:13px;background:var(--gold-soft);border-radius:var(--r-sm);padding:6px 10px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:20;opacity:0;transition:opacity .2s}
+.scrim.open{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;max-width:720px;margin:0 auto;max-height:88%;overflow:auto;background:var(--paper);border:1.8px solid var(--line);border-bottom:0;border-radius:24px 26px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.3,1)}
+.sheet.open{transform:none}
+.sheet .grab{width:44px;height:5px;border-radius:9px;background:var(--line);opacity:.35;margin:-6px auto 10px}
+.shead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.shead h2{margin:0;font-family:var(--f-display);font-size:22px}
+.sbody{display:grid;gap:14px}
+.dblday{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1.6px solid var(--line);border-radius:var(--r);background:var(--card);cursor:pointer}
+.dblday.on{background:var(--gold-soft)}
+.dblday input{width:20px;height:20px;accent-color:var(--gold)}
+.dblday svg{width:36px;height:20px}
+.dblday b{font-family:var(--f-display);font-size:17px}
+.shift{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 12px;background:var(--c);border:1.6px solid var(--line);border-radius:var(--r)}
+.shift .nm{min-width:0}
+.shift .nm b{display:block;font-family:var(--f-display);font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shift .nm small{font-size:12px;color:var(--ink-soft)}
+.stepper{display:flex;align-items:center;gap:4px}
+.stepper button{width:32px;height:32px;border:1.5px solid var(--line);border-radius:50%;background:var(--card);font-size:18px;line-height:1;display:grid;place-items:center}
+.stepper input{width:52px;min-height:34px;text-align:center;border:1.5px solid var(--line);border-radius:10px;background:var(--card);font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.x2{min-width:44px;height:34px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);font-family:var(--f-display);font-weight:700;font-size:15px}
+.x2[aria-pressed="true"]{background:var(--gold);color:#3B2C1F}
+.daytotal{display:flex;justify-content:space-between;align-items:baseline;padding:4px 4px 0;font-size:14px}
+.daytotal b{font-family:var(--f-display);font-size:24px}
+.confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 12px;border:1.5px dashed var(--danger);border-radius:var(--r);color:var(--danger)}
+.sfoot{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-top:6px}
+
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1.6px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+.tabs .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 0;color:var(--ink-soft);font-size:12px}
+.tabs button svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs button[aria-current="page"]{color:var(--ink);font-weight:700}
+.tabs button[aria-current="page"] svg{fill:var(--gold-soft)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:30;max-width:calc(100% - 32px);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:999px;font-size:13.5px;text-align:center}
+.loading{display:flex;flex-direction:column;align-items:center;gap:10px;padding:60px 0;color:var(--ink-soft)}
+.loading svg{width:110px;animation:bob 1.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-fish" viewBox="0 0 64 36">
+    <path style="fill:var(--gold);stroke:var(--line);stroke-width:2.4;stroke-linejoin:round" d="M7 18c4-9 16-13.5 28-12.5 7 .6 12 4 15 8l9-7c1.5 6 1.5 17 0 23l-9-7c-3 4-8 7.4-15 8-12 1-24-3.5-28-12.5z"/>
+    <path style="fill:none;stroke:var(--line);stroke-width:1.9;stroke-linecap:round" d="M26 12.5v11M31.5 11v14M37 12.5v11M13 22.5c2 1.3 4.5 1.3 6.5 0"/>
+    <circle cx="15" cy="15.5" r="2" style="fill:var(--line)"/>
+  </symbol>
+  <symbol id="art-cat" viewBox="0 0 140 150">
+    <g style="stroke:var(--line);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+      <path style="fill:var(--card)" d="M38 92c-6 18-6 36 2 50h60c8-14 8-32 2-50z"/>
+      <path style="fill:none" d="M50 142c0-6 9-6 9 0M81 142c0-6 9-6 9 0"/>
+      <path style="fill:var(--card)" d="M30 60c-2-14 2-28 8-36l-2-18 16 12c10-4 26-4 36 0l16-12-2 18c6 8 10 22 8 36-2 18-20 28-40 28s-38-10-40-28z"/>
+      <path style="fill:none" d="M62 22v9M70 20v11M78 22v9M29 53l-10-2M29 59l-11 2M111 53l10-2M111 59l11 2"/>
+      <ellipse cx="56" cy="55" rx="6" ry="7" style="fill:var(--card)"/>
+      <ellipse cx="84" cy="55" rx="6" ry="7" style="fill:var(--card)"/>
+      <circle cx="57.5" cy="57" r="3" style="fill:var(--line);stroke:none"/>
+      <circle cx="85.5" cy="57" r="3" style="fill:var(--line);stroke:none"/>
+      <path style="fill:none" d="M64 68q3 4 6 0q3 4 6 0"/>
+    </g>
+    <use href="#i-fish" x="46" y="74" width="40" height="23"/>
+    <use href="#i-fish" x="66" y="80" width="34" height="19" transform="rotate(-18 83 89)"/>
+    <g style="stroke:var(--line);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round">
+      <path style="fill:var(--kraft)" d="M40 96h60l-5 42H45z"/>
+      <path style="fill:none" d="M46 104h48"/>
+      <ellipse cx="41" cy="112" rx="8" ry="7" style="fill:var(--card)"/>
+      <ellipse cx="99" cy="112" rx="8" ry="7" style="fill:var(--card)"/>
+    </g>
+    <text x="70" y="128" text-anchor="middle" style="fill:var(--card);font:700 17px var(--f-display)">薪</text>
+  </symbol>
+  <symbol id="art-pup" viewBox="0 0 120 84">
+    <g style="fill:var(--pup);stroke:var(--line);stroke-width:2.2">
+      <circle cx="96" cy="40" r="6"/>
+      <circle cx="40" cy="70" r="7"/><circle cx="56" cy="72" r="7"/><circle cx="74" cy="72" r="7"/><circle cx="88" cy="68" r="7"/>
+      <circle cx="46" cy="54" r="14"/><circle cx="64" cy="52" r="15"/><circle cx="80" cy="54" r="13"/>
+      <circle cx="56" cy="40" r="11"/><circle cx="72" cy="40" r="11"/>
+      <circle cx="30" cy="36" r="17"/>
+      <circle cx="20" cy="22" r="8"/><circle cx="34" cy="18" r="8"/>
+      <ellipse cx="40" cy="44" rx="7" ry="10"/>
+    </g>
+    <circle cx="25" cy="34" r="2.6" style="fill:var(--line)"/>
+    <ellipse cx="15" cy="40" rx="3.2" ry="2.6" style="fill:var(--line)"/>
+    <use href="#i-fish" x="8" y="42" width="30" height="17"/>
+  </symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2" style="stroke-width:2.2"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M9 8V5.5h6V8M3 13.5h18"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="6" width="4" height="14" rx="1"/><rect x="16" y="9" width="4" height="11" rx="1"/></symbol>
+</svg>
+
+<div class="app">
+  <header class="top">
+    <div>
+      <div class="date num" id="today"></div>
+      <h1>打工薪水本 <svg aria-hidden="true"><use href="#i-fish"/></svg></h1>
+    </div>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+  <main id="main"></main>
+</div>
+
+<nav class="tabs" aria-label="分頁">
+  <div class="in">
+    <button data-act="tab" data-tab="home"><svg><use href="#i-home"/></svg>首頁</button>
+    <button data-act="tab" data-tab="cal"><svg><use href="#i-cal"/></svg>月曆</button>
+    <button data-act="tab" data-tab="jobs"><svg><use href="#i-bag"/></svg>工作</button>
+    <button data-act="tab" data-tab="stats"><svg><use href="#i-chart"/></svg>統計</button>
+  </div>
+</nav>
+<div class="scrim" id="scrim" data-act="close" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+/*CORE*/
+const LABOR=[11100,12540,13500,15840,16500,17280,17880,19047,20008,21009,22000,23100,24000,25250,26400,27600,28800,29500,30300,31800,33300,34800,36300,38200,40100,42000,43900,45800];
+const LABOR_PT_MAX=28800;
+const HEALTH=[29500,30300,31800,33300,34800,36300,38200,40100,42000,43900,45800,48200,50600,53000,55400,57800,60800,63800,66800,69800,72800,76500,80200,83900,87600,92100,96600,101100,105600,110100,115500,120900,126300,131700,137100,142500,147900,150000,156400,162800,169200,175600,182000,189500,197000,204500,212000,219500];
+const DEF_RATES={laborRate:12.5,laborShare:20,healthRate:5.17,healthShare:30};
+const pad=n=>String(n).padStart(2,'0');
+const ymd=(y,m,d)=>`${y}-${pad(m)}-${pad(d)}`;
+const dim=(y,m)=>new Date(y,m,0).getDate();
+function addMonth(y,m,k){const t=y*12+(m-1)+k;return [Math.floor(t/12),t%12+1];}
+function parseD(ds){const [y,m,d]=ds.split('-').map(Number);return {y,m,d};}
+function periodOf(job,ds){
+  const {y,m,d}=parseD(ds);
+  const cs=Math.min(28,Math.max(1,parseInt(job.cycleStart,10)||1));
+  let s,e;
+  if(cs===1){s=[y,m,1];e=[y,m,dim(y,m)];}
+  else if(d>=cs){const [ny,nm]=addMonth(y,m,1);s=[y,m,cs];e=[ny,nm,cs-1];}
+  else{const [py,pm]=addMonth(y,m,-1);s=[py,pm,cs];e=[y,m,cs-1];}
+  const off=job.payOffset==null?1:+job.payOffset;
+  const [qy,qm]=addMonth(e[0],e[1],off);
+  const pd=Math.min(Math.max(1,parseInt(job.payDay,10)||1),dim(qy,qm));
+  return {key:`${e[0]}-${pad(e[1])}`,start:ymd(...s),end:ymd(...e),pay:ymd(qy,qm,pd)};
+}
+function bracket(table,amount){for(const v of table)if(v>=amount)return v;return table[table.length-1];}
+function insuredOf(cfg,table,gross){return cfg.mode==='fixed'&&+cfg.amount>0?+cfg.amount:bracket(table,gross);}
+function laborFee(ins,r){return Math.round(ins*r.laborRate/100*r.laborShare/100);}
+function healthFee(ins,deps,r){return Math.round(ins*r.healthRate/100*r.healthShare/100)*(1+Math.min(Math.max(0,parseInt(deps,10)||0),3));}
+function multOf(month,ds,sh){if(sh&&(sh.m===1||sh.m===2))return sh.m;return month&&month.dbl&&month.dbl[ds]?2:1;}
+function computePeriods(jobs,months,rates){
+  const jm={};jobs.forEach(j=>jm[j.id]=j);
+  const acc={};
+  for(const ym in months){
+    const mo=months[ym];const days=(mo&&mo.days)||{};
+    for(const ds in days){
+      for(const jid in days[ds]){
+        const job=jm[jid];if(!job)continue;
+        const sh=days[ds][jid];const h=+sh.h||0;if(h<=0)continue;
+        const mult=multOf(mo,ds,sh);const p=periodOf(job,ds);
+        const k=jid+'|'+p.key;
+        const r=acc[k]||(acc[k]={...p,jobId:jid,hours:0,h2:0,raw:0});
+        r.hours+=h;if(mult>1)r.h2+=h;r.raw+=h*(+job.wage||0)*mult;
+      }
+    }
+  }
+  const out=Object.values(acc).map(r=>{
+    const job=jm[r.jobId];const gross=Math.round(r.raw);
+    const lOn=!!(job.labor&&job.labor.on),hOn=!!(job.health&&job.health.on);
+    const laborIns=lOn?insuredOf(job.labor,LABOR,gross):0;
+    const healthIns=hOn?insuredOf(job.health,HEALTH,gross):0;
+    const labor=lOn?laborFee(laborIns,rates):0;
+    const health=hOn?healthFee(healthIns,job.health.deps,rates):0;
+    return {...r,gross,laborIns,healthIns,labor,health,net:Math.max(0,gross-labor-health)};
+  });
+  out.sort((a,b)=>a.start<b.start?-1:a.start>b.start?1:0);
+  return out;
+}
+/*ENDCORE*/
+
+const COLORS=['p1','p2','p3','p4','p5','p6'];
+const COLOR_NAMES={p1:'草莓',p2:'天空',p3:'抹茶',p4:'奶油',p5:'薰衣草',p6:'蜜桃'};
+const WD=['日','一','二','三','四','五','六'];
+const now=new Date();
+const TODAY=ymd(now.getFullYear(),now.getMonth()+1,now.getDate());
+const S={jobs:[],months:{},rates:{...DEF_RATES},tab:'home',calY:now.getFullYear(),calM:now.getMonth()+1,statY:now.getFullYear(),mode:'loading',loaded:{jobs:false,months:false}};
+let store=null,sheetCtx=null;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+const comma=n=>Math.round(n).toLocaleString('en-US');
+const hrs=h=>(Math.round(h*10)/10)+'h';
+const md=ds=>{const {m,d}=parseD(ds);return `${m}/${d}`;};
+const dObj=ds=>{const {y,m,d}=parseD(ds);return new Date(y,m-1,d);};
+const fishSvg=(cls='')=>`<svg class="${cls}" viewBox="0 0 64 36" aria-hidden="true"><use href="#i-fish"/></svg>`;
+const jobById=id=>S.jobs.find(j=>j.id===id);
+const col=j=>`var(--${COLORS.includes(j&&j.color)?j.color:'p1'})`;
+function monthOf(ds){return S.months[ds.slice(0,7)];}
+function ensureMonth(ym){return S.months[ym]||(S.months[ym]={days:{},dbl:{},note:{}});}
+function dayHours(ds){const mo=monthOf(ds);const sh=(mo&&mo.days&&mo.days[ds])||{};let t=0;for(const id in sh)if(jobById(id))t+=+sh[id].h||0;return t;}
+function dayEarn(ds){const mo=monthOf(ds);if(!mo||!mo.days)return 0;const sh=mo.days[ds]||{};let t=0;for(const id in sh){const j=jobById(id);if(j)t+=(+sh[id].h||0)*j.wage*multOf(mo,ds,sh[id]);}return Math.round(t);}
+
+/* ---------- storage ---------- */
+const dirty=new Set(),inflight=new Set();let flushTimer=null,flushing=false;
+function cleanMonth(mo){
+  const out={days:{},dbl:{},note:{}};
+  for(const ds in mo.days||{}){const d={};for(const id in mo.days[ds]){const s=mo.days[ds][id];const h=Math.max(0,Math.min(24,+s.h||0));if(h>0||s.m){d[id]=s.m?{h,m:s.m}:{h};}}if(Object.keys(d).length)out.days[ds]=d;}
+  for(const ds in mo.dbl||{})if(mo.dbl[ds])out.dbl[ds]=true;
+  for(const ds in mo.note||{})if(String(mo.note[ds]).trim())out.note[ds]=String(mo.note[ds]).slice(0,500);
+  return out;
+}
+const canWrite=()=>store&&!S.readOnly;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+// one write, retried once after a short random delay when the platform is briefly unavailable
+async function write(fn){
+  try{return await fn();}
+  catch(e){const c=e&&e.code;if(c&&c!=='unavailable'&&c!=='resource_exhausted')throw e;await wait(1200+Math.random()*1500);return await fn();}
+}
+function touchMonth(ym){if(!canWrite())return;dirty.add(ym);clearTimeout(flushTimer);flushTimer=setTimeout(flush,600);}
+async function flush(){
+  if(flushing)return;flushing=true;
+  try{
+    while(dirty.size&&canWrite()){
+      const ym=dirty.values().next().value;dirty.delete(ym);inflight.add(ym);
+      try{await write(()=>store.monthsCol.doc(ym).set(cleanMonth(S.months[ym]||{})));}
+      catch(e){saveError(e);}
+      finally{inflight.delete(ym);}
+    }
+  }finally{flushing=false;}
+}
+function setReadOnly(){
+  S.readOnly=true;dirty.clear();clearTimeout(flushTimer);
+  const b=$('#banner');b.hidden=false;b.textContent='這個帳號在這頁只能檢視：可以看，但改動不會保存。請頁面擁有者把你的權限調成可以編輯。';
+}
+function saveError(e){
+  const c=e&&e.code;
+  if(c==='invalid_argument'||c==='transform_error'){setReadOnly();toast('沒有存到：這個帳號在這頁只能檢視，不能修改。');return;}
+  if(c==='revoked'||c==='not_granted'||c==='capability_disabled'||c==='capability_removed'){S.readOnly=true;toast('沒有存到：這一頁的保存權限被關掉了，重新整理頁面看看。');return;}
+  toast(c==='quota_exceeded'?'沒有存到：儲存空間滿了，刪掉一些舊資料再試。':
+        c==='resource_exhausted'?'沒有存到：改得太快了，停一下再改一次就會重新儲存。':
+        '沒有存到：連線不穩，等一下再改一次就會重新儲存。');
+}
+async function saveJob(job){S.jobs=S.jobs.filter(j=>j.id!==job.id).concat(job).sort(byCreated);render();if(canWrite()){try{await write(()=>store.jobsCol.doc(job.id).set(job));}catch(e){saveError(e);}}}
+async function removeJob(id){S.jobs=S.jobs.filter(j=>j.id!==id);render();if(canWrite()){try{await write(()=>store.jobsCol.doc(id).delete());}catch(e){saveError(e);}}}
+async function saveRates(){render();if(canWrite()){try{await write(()=>store.settingsDoc.set({...S.rates}));}catch(e){saveError(e);}}}
+const byCreated=(a,b)=>(a.created||0)-(b.created||0);
+
+function sampleData(){
+  const t=Date.now();
+  const jobs=[
+    {id:'demo-cafe',name:'咖啡廳（範例）',color:'p1',wage:196,cycleStart:1,payOffset:1,payDay:5,labor:{on:true,mode:'auto',amount:0},health:{on:false,mode:'auto',amount:0,deps:0},created:t},
+    {id:'demo-tutor',name:'補習班助教（範例）',color:'p2',wage:230,cycleStart:26,payOffset:1,payDay:10,labor:{on:true,mode:'fixed',amount:27600},health:{on:true,mode:'auto',amount:0,deps:0},created:t+1}
+  ];
+  const months={};
+  for(let k=-2;k<=0;k++){
+    const [y,m]=addMonth(now.getFullYear(),now.getMonth()+1,k);const ym=`${y}-${pad(m)}`;
+    const mo=months[ym]={days:{},dbl:{},note:{}};
+    const last=k===0?Math.min(dim(y,m),now.getDate()+7):dim(y,m);
+    for(let d=1;d<=last;d++){
+      const ds=ymd(y,m,d);const w=new Date(y,m-1,d).getDay();const day={};
+      if(w===1||w===3||w===5)day['demo-cafe']={h:5};
+      if(w===6)day['demo-cafe']={h:7};
+      if(w===2||w===4)day['demo-tutor']={h:3.5};
+      if(Object.keys(day).length)mo.days[ds]=day;
+    }
+    const d10=ymd(y,m,10);mo.dbl[d10]=true;
+    if(!mo.days[d10])mo.days[d10]={'demo-cafe':{h:6}};
+    mo.note[d10]='範例：國定假日雙倍薪';
+  }
+  return {jobs,months};
+}
+async function loadSample(){
+  const {jobs,months}=sampleData();
+  S.jobs=S.jobs.concat(jobs).sort(byCreated);
+  for(const ym in months){const cur=ensureMonth(ym);for(const ds in months[ym].days)cur.days[ds]={...(cur.days[ds]||{}),...months[ym].days[ds]};Object.assign(cur.dbl,months[ym].dbl);Object.assign(cur.note,months[ym].note);}
+  render();
+  if(canWrite()){try{for(const j of jobs)await write(()=>store.jobsCol.doc(j.id).set(j));for(const ym in months)touchMonth(ym);toast('放好範例了，之後可以在「工作」頁刪掉');}catch(e){saveError(e);}}
+}
+function enterDemo(){
+  const {jobs,months}=sampleData();S.jobs=jobs;S.months=months;S.mode='demo';
+  const b=$('#banner');b.hidden=false;b.textContent='預覽模式：這是範例資料，改動不會保存。在 claude.ai 登入後開啟這一頁，就能記錄自己的薪水。';
+  render();
+}
+async function init(){
+  render();
+  const c=window.claude;
+  if(!c||!c.use){enterDemo();return;}
+  let db=null,user=null;
+  try{[db,user]=await Promise.all([c.use('db'),c.use('user')]);}catch(e){}
+  const uid=user?await user.id():null;
+  if(!db||!uid){enterDemo();return;}
+  const base=`data/users/${uid}`;const prof=db.doc(base+'/profile');
+  store={jobsCol:prof.collection('jobs'),monthsCol:prof.collection('months'),settingsDoc:db.doc(base+'/settings')};
+  S.mode='live';S.jobs=[];S.months={};
+  if(await user.can('data.write')===false)setReadOnly();
+  // a listener ended by `unavailable` only recovers by subscribing again (once)
+  const listen=(ref,next)=>{let again=true;const sub=()=>ref.onSnapshot(next,e=>{
+    if(e&&e.code==='unavailable'&&again){again=false;setTimeout(sub,1500);return;}
+    const b=$('#banner');b.hidden=false;b.textContent='暫時連不上雲端，畫面上的資料可能不是最新的。重新整理頁面試試看。';});sub();};
+  listen(store.jobsCol,snap=>{S.jobs=snap.docs.map(d=>({...d.data(),id:d.id})).sort(byCreated);S.loaded.jobs=true;render();});
+  listen(store.monthsCol,snap=>{
+    snap.docChanges().forEach(ch=>{const id=ch.doc.id;if(dirty.has(id)||inflight.has(id))return;
+      if(ch.type==='removed')delete S.months[id];else S.months[id]=JSON.parse(JSON.stringify(ch.doc.data()));});
+    S.loaded.months=true;render();
+  });
+  listen(store.settingsDoc,s=>{if(s.exists)S.rates={...DEF_RATES,...s.data()};render();});
+}
+
+/* ---------- render ---------- */
+function render(){
+  const d=dObj(TODAY);
+  $('#today').textContent=`${TODAY.replace(/-/g,'.')} 星期${WD[d.getDay()]}`;
+  document.querySelectorAll('.tabs button').forEach(b=>{if(b.dataset.tab===S.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+  const main=$('#main');
+  if(S.mode==='loading'||(S.mode==='live'&&!(S.loaded.jobs&&S.loaded.months))){
+    main.innerHTML=`<div class="loading"><svg viewBox="0 0 140 150" aria-hidden="true"><use href="#art-cat"/></svg>正在翻開薪水本…</div>`;return;
+  }
+  main.innerHTML=S.tab==='cal'?renderCal():S.tab==='jobs'?renderJobs():S.tab==='stats'?renderStats():renderHome();
+}
+function emptyState(){
+  return `<div class="card empty"><svg class="cat" viewBox="0 0 140 150" aria-hidden="true"><use href="#art-cat"/></svg>
+    <h3>還沒有工作喔</h3><p>先新增第一份工作，設定時薪和發薪日，就能在月曆上排班算薪水。</p>
+    <div class="acts"><button class="btn gold" data-act="job-new">新增第一份工作</button><button class="btn ghost" data-act="sample">放入範例資料</button></div></div>`;
+}
+function renderHome(){
+  if(!S.jobs.length)return emptyState();
+  const P=computePeriods(S.jobs,S.months,S.rates);
+  const ym=TODAY.slice(0,7);const mNum=+ym.slice(5);
+  const inMonth=P.filter(r=>r.pay.slice(0,7)===ym).sort((a,b)=>a.pay<b.pay?-1:1);
+  const total=inMonth.reduce((s,r)=>s+r.net,0);const paid=inMonth.filter(r=>r.pay<=TODAY).length;
+  // week strip
+  const t=dObj(TODAY);const mon=new Date(t);mon.setDate(t.getDate()-((t.getDay()+6)%7));
+  let week='';
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const ds=ymd(d.getFullYear(),d.getMonth()+1,d.getDate());
+    const h=dayHours(ds);const f=Math.min(1,h/8)*100;const mo=monthOf(ds);const dbl=mo&&mo.dbl&&mo.dbl[ds];
+    week+=`<button class="wk${ds===TODAY?' today':''}" data-act="day" data-d="${ds}" aria-label="${md(ds)} ${h?hrs(h):'沒有班'}">
+      <span class="lb">${ds===TODAY?'今天':WD[d.getDay()]}</span><span class="cir num" style="--f:${f}%">${d.getDate()}</span><span class="mk">${dbl?fishSvg():''}</span></button>`;}
+  const rows=inMonth.map(r=>{const j=jobById(r.jobId);return `<div class="payrow"><span class="when num">${md(r.pay)}</span>
+    <span class="who"><b><i class="dot" style="background:${col(j)}"></i>${esc(j.name)}</b><small class="num">${md(r.start)}–${md(r.end)} · ${hrs(r.hours)}</small></span>
+    <span class="amt num">${money(r.net)}<br><span class="pill ${r.pay<=TODAY?'ok':'wait'}">${r.pay<=TODAY?'已入帳':'待入帳'}</span></span></div>`;}).join('');
+  const cards=S.jobs.map(j=>{
+    const p=periodOf(j,TODAY);const r=P.find(x=>x.jobId===j.id&&x.key===p.key);
+    const mon=inMonth.filter(x=>x.jobId===j.id).reduce((s,x)=>s+x.net,0);
+    return `<div class="card jcard" style="--c:${col(j)}"><span class="nm">${esc(j.name)}</span><span class="rate num">時薪 ${money(j.wage)}</span>
+      <span class="row"><span class="muted">本期 <span class="num">${md(p.start)}–${md(p.end)}</span></span><b class="num">${hrs(r?r.hours:0)}</b></span>
+      <span class="money num">${money(r?r.gross:0)}</span>
+      <span class="row"><span class="muted">${md(p.pay)} 發薪</span><span class="muted">未扣勞健保</span></span>
+      <hr><span class="row"><span>${mNum} 月入帳</span><b class="num">${money(mon)}</b></span></div>`;}).join('');
+  return `<div class="week">${week}</div>
+  <section class="card hero"><div><p class="eyebrow">${mNum} 月會入帳</p><p class="big num">${money(total)}</p>
+    <p class="sub">${inMonth.length?`${inMonth.length} 筆薪水，${paid} 筆已入帳`:'這個月還沒有發薪日'}</p></div>
+    <svg class="cat" viewBox="0 0 140 150" aria-hidden="true"><use href="#art-cat"/></svg>
+    ${rows?`<div class="paylist" style="grid-column:1/-1">${rows}</div>`:''}</section>
+  <h2 class="h2">我的工作 <small>目前計薪區間的進度</small></h2>
+  <div class="jobgrid">${cards}</div>
+  <div class="tip"><svg class="pup" viewBox="0 0 120 84" aria-hidden="true"><use href="#art-pup"/></svg>
+    <div><span class="bubble">辛苦了!!!</span><p>每一個小時都算數。累了就休息一下，薪水本會幫你記得。</p></div></div>`;
+}
+function renderCal(){
+  const y=S.calY,m=S.calM,ym=`${y}-${pad(m)}`;const mo=S.months[ym];
+  const first=new Date(y,m-1,1);const off=(first.getDay()+6)%7;const n=dim(y,m);
+  let cells=['一','二','三','四','五','六','日'].map(w=>`<div class="wd">${w}</div>`).join('');
+  for(let i=0;i<off;i++)cells+=`<div class="day blank" aria-hidden="true"></div>`;
+  for(let d=1;d<=n;d++){
+    const ds=ymd(y,m,d);const sh=(mo&&mo.days&&mo.days[ds])||{};const dbl=mo&&mo.dbl&&mo.dbl[ds];
+    const list=S.jobs.filter(j=>sh[j.id]&&+sh[j.id].h>0);
+    const tot=list.reduce((s,j)=>s+(+sh[j.id].h),0);
+    const anyX2=list.some(j=>multOf(mo,ds,sh[j.id])===2);
+    cells+=`<button class="day${dbl?' dbl':''}${ds===TODAY?' today':''}" data-act="day" data-d="${ds}" aria-label="${m}月${d}日${tot?'，'+hrs(tot):''}${dbl?'，雙倍薪':''}">
+      <span class="dn num"><span>${d}</span>${anyX2||dbl?fishSvg():''}</span>
+      <span class="tags">${list.map(j=>`<span class="tag num" style="--c:${col(j)}">${esc(j.name.slice(0,2))} ${hrs(+sh[j.id].h)}${multOf(mo,ds,sh[j.id])===2?' ×2':''}</span>`).join('')}</span>
+      <span class="dots">${list.map(j=>`<i style="--c:${col(j)}"></i>`).join('')}</span>
+      ${tot?`<span class="tot num">${hrs(tot)}</span>`:''}</button>`;
+  }
+  // subtotal by work date
+  const sub=S.jobs.map(j=>{let h=0,g=0;if(mo&&mo.days)for(const ds in mo.days){const s=mo.days[ds][j.id];if(s&&+s.h>0){h+=+s.h;g+=s.h*j.wage*multOf(mo,ds,s);}}return {j,h,g:Math.round(g)};});
+  const subTot=sub.reduce((s,x)=>s+x.g,0);
+  return `<div class="calhead"><span class="ttl num">${y} 年 ${m} 月</span><span class="nav">
+      <button class="iconbtn" data-act="cal-prev" aria-label="上個月">‹</button><button class="btn sm" data-act="cal-today">今天</button><button class="iconbtn" data-act="cal-next" aria-label="下個月">›</button></span></div>
+    <div class="card cal"><div class="calgrid">${cells}</div></div>
+    <div class="legend"><span>${fishSvg()}雙倍薪</span><span>點日期填時數</span></div>
+    ${S.jobs.length?`<h2 class="h2">${m} 月小計 <small>依上班日期、未扣勞健保</small></h2>
+    <div class="card sublist">${sub.map(x=>`<div class="subrow"><span class="n"><i class="dot" style="background:${col(x.j)}"></i><b>${esc(x.j.name)}</b></span><span class="num muted">${hrs(x.h)}</span><span class="m num">${money(x.g)}</span></div>`).join('')}
+      <div class="subrow"><span class="n"><b>合計</b></span><span class="num muted">${hrs(sub.reduce((s,x)=>s+x.h,0))}</span><span class="m num">${money(subTot)}</span></div></div>`:`<div style="margin-top:18px">${emptyState()}</div>`}`;
+}
+function cycleText(j){const cs=+j.cycleStart||1;return cs===1?'每月 1 日～月底':`每月 ${cs} 日～隔月 ${cs-1} 日`;}
+function payText(j){const o=j.payOffset==null?1:+j.payOffset;return `${['當月','下個月','下下個月'][o]||'下個月'} ${j.payDay} 日發薪`;}
+function insText(j){const a=[];if(j.labor&&j.labor.on)a.push('勞保'+(j.labor.mode==='fixed'?` ${comma(j.labor.amount)}`:' 自動'));if(j.health&&j.health.on)a.push('健保'+(j.health.mode==='fixed'?` ${comma(j.health.amount)}`:' 自動')+(+j.health.deps?`＋眷屬 ${j.health.deps}`:''));return a.length?a.join(' · '):'不在這裡加保';}
+function renderJobs(){
+  return `<h2 class="h2" style="margin-top:4px">工作設定 <small>${S.jobs.length} 份工作</small></h2>
+  <div class="joblist">${S.jobs.map(j=>`<div class="card jrow" style="--c:${col(j)}"><span class="sw">${fishSvg()}</span>
+    <span class="info"><b>${esc(j.name)}</b><small class="num">時薪 ${money(j.wage)} · ${cycleText(j)} · ${payText(j)}</small><small>${insText(j)}</small></span>
+    <button class="btn sm" data-act="job-edit" data-j="${esc(j.id)}">編輯</button></div>`).join('')}
+    <button class="addjob" data-act="job-new">＋ 新增工作</button>
+    ${S.jobs.length?'':`<button class="btn ghost" data-act="sample">放入範例資料</button>`}</div>`;
+}
+function niceMax(v){if(v<=0)return 10000;const p=Math.pow(10,Math.floor(Math.log10(v)));const s=p/2;return Math.ceil(v/s)*s;}
+const short=n=>n>=10000?(Math.round(n/1000)/10)+'萬':comma(n);
+function renderStats(){
+  const y=S.statY;const P=computePeriods(S.jobs,S.months,S.rates).filter(r=>+r.pay.slice(0,4)===y);
+  const total=P.reduce((s,r)=>s+r.net,0);
+  const perJob=S.jobs.map(j=>({j,rows:P.filter(r=>r.jobId===j.id).sort((a,b)=>a.pay<b.pay?-1:1)})).filter(x=>x.rows.length);
+  // chart
+  const W=640,H=230,L=46,B=26,T=14,R=8;const months=Array.from({length:12},(_,i)=>i+1);
+  const stacks=months.map(mn=>S.jobs.map(j=>({j,v:P.filter(r=>r.jobId===j.id&&+r.pay.slice(5,7)===mn).reduce((s,r)=>s+r.net,0)})).filter(x=>x.v>0));
+  const mx=niceMax(Math.max(0,...stacks.map(s=>s.reduce((a,x)=>a+x.v,0))));
+  const ch=H-B-T,cw=(W-L-R)/12,bw=cw*.58;const yy=v=>T+ch-v/mx*ch;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${y} 年每月入帳">`;
+  [0,.5,1].forEach(f=>{const v=mx*f;svg+=`<line x1="${L}" x2="${W-R}" y1="${yy(v)}" y2="${yy(v)}" style="stroke:var(--line);stroke-width:1;stroke-dasharray:${f?'3 4':'0'};opacity:${f?.45:.9}"/><text x="${L-6}" y="${yy(v)+4}" text-anchor="end" style="fill:var(--ink-soft);font-size:11px">${short(v)}</text>`;});
+  stacks.forEach((st,i)=>{let base=0;const x=L+i*cw+(cw-bw)/2;const sum=st.reduce((a,s)=>a+s.v,0);
+    st.forEach(s=>{const y1=yy(base+s.v),y0=yy(base);svg+=`<rect x="${x}" y="${y1}" width="${bw}" height="${Math.max(0,y0-y1)}" rx="3" style="fill:${col(s.j)};stroke:var(--line);stroke-width:1.5"><title>${esc(s.j.name)} ${money(s.v)}</title></rect>`;base+=s.v;});
+    if(sum>0)svg+=`<text x="${x+bw/2}" y="${yy(sum)-5}" text-anchor="middle" style="fill:var(--ink);font-size:11px;font-weight:700">${short(sum)}</text>`;
+    svg+=`<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" style="fill:var(--ink-soft);font-size:11.5px">${i+1}月</text>`;});
+  svg+='</svg>';
+  const tables=perJob.map(({j,rows})=>{const s=k=>rows.reduce((a,r)=>a+r[k],0);
+    return `<div class="card jobtbl"><div class="hd"><i class="dot" style="background:${col(j)}"></i>${esc(j.name)}</div><div class="tblwrap"><table class="num">
+    <thead><tr><th>計薪區間</th><th>發薪日</th><th>時數</th><th>雙倍時數</th><th>毛額</th><th>勞保</th><th>健保</th><th>實領</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr><td>${md(r.start)}–${md(r.end)}</td><td>${md(r.pay)}</td><td>${hrs(r.hours)}</td><td>${r.h2?hrs(r.h2):'—'}</td><td>${comma(r.gross)}</td><td>${r.labor?'−'+comma(r.labor):'—'}</td><td>${r.health?'−'+comma(r.health):'—'}</td><td class="net">${money(r.net)}</td></tr>`).join('')}
+    </tbody><tfoot><tr><td>合計</td><td></td><td>${hrs(s('hours'))}</td><td>${hrs(s('h2'))}</td><td>${comma(s('gross'))}</td><td>−${comma(s('labor'))}</td><td>−${comma(s('health'))}</td><td class="net">${money(s('net'))}</td></tr></tfoot></table></div></div>`;}).join('');
+  const r=S.rates;
+  return `<div class="yearbar"><button class="iconbtn" data-act="year-prev" aria-label="前一年">‹</button><span class="ttl num">${y} 年</span><button class="iconbtn" data-act="year-next" aria-label="下一年">›</button></div>
+  <section class="card yearsum"><span class="muted">全年入帳實領（依發薪日）</span><span class="big num">${money(total)}</span>
+    <div class="chips">${perJob.map(({j,rows})=>`<span class="chip" style="--c:${col(j)}">${esc(j.name)} <b class="num">${money(rows.reduce((a,x)=>a+x.net,0))}</b></span>`).join('')||'<span class="muted">這一年還沒有發薪紀錄</span>'}</div></section>
+  <h2 class="h2">每月入帳 <small>依工作顏色堆疊</small></h2>
+  <div class="card chart">${svg}</div>
+  ${tables?`<h2 class="h2">每期明細</h2>${tables}`:''}
+  <h2 class="h2">勞健保費率</h2>
+  <section class="card rates"><div class="grid">
+    <label class="field"><span>勞保費率 %（含就保）</span><input class="inp num" id="rLaborRate" type="number" step="0.01" min="0" value="${r.laborRate}"></label>
+    <label class="field"><span>勞保自付比例 %</span><input class="inp num" id="rLaborShare" type="number" step="1" min="0" max="100" value="${r.laborShare}"></label>
+    <label class="field"><span>健保費率 %</span><input class="inp num" id="rHealthRate" type="number" step="0.01" min="0" value="${r.healthRate}"></label>
+    <label class="field"><span>健保自付比例 %</span><input class="inp num" id="rHealthShare" type="number" step="1" min="0" max="100" value="${r.healthShare}"></label></div>
+    <p class="note">預設為 2026 年費率與投保級距（基本工資 29,500）。勞健保是每個有上班的計薪區間扣一次，實際金額以薪資單為準。</p>
+    <div><button class="btn sm ghost" data-act="rates-reset">恢復預設</button></div></section>`;
+}
+
+/* ---------- sheets ---------- */
+function openSheet(html){
+  const sh=$('#sheet'),sc=$('#scrim');sh.innerHTML=`<div class="grab"></div>`+html;sh.hidden=false;sc.hidden=false;
+  requestAnimationFrame(()=>{sh.classList.add('open');sc.classList.add('open');const f=sh.querySelector('input,select,textarea,button:not([data-act=close])');if(f&&window.innerWidth>600)f.focus();});
+}
+function closeSheet(){
+  const sh=$('#sheet'),sc=$('#scrim');sh.classList.remove('open');sc.classList.remove('open');sheetCtx=null;
+  setTimeout(()=>{if(!sheetCtx){sh.hidden=true;sc.hidden=true;sh.innerHTML='';}},260);
+}
+function openDay(ds){
+  sheetCtx={type:'day',ds};const d=dObj(ds);const mo=monthOf(ds);const dbl=!!(mo&&mo.dbl&&mo.dbl[ds]);
+  const rows=S.jobs.map(j=>{const s=(mo&&mo.days&&mo.days[ds]&&mo.days[ds][j.id])||{};const x2=multOf(mo,ds,s)===2;
+    return `<div class="shift" style="--c:${col(j)}"><span class="nm"><b>${esc(j.name)}</b><small class="num">時薪 ${money(j.wage)}</small></span>
+    <span class="stepper"><button data-act="step" data-j="${esc(j.id)}" data-v="-0.5" aria-label="減 0.5 小時">−</button><input id="h-${esc(j.id)}" data-j="${esc(j.id)}" type="number" inputmode="decimal" step="0.5" min="0" max="24" value="${+s.h||''}" placeholder="0" aria-label="${esc(j.name)} 時數"><button data-act="step" data-j="${esc(j.id)}" data-v="0.5" aria-label="加 0.5 小時">+</button></span>
+    <button class="x2" data-act="x2" data-j="${esc(j.id)}" aria-pressed="${x2}" aria-label="這班雙倍薪">×2</button></div>`;}).join('');
+  openSheet(`<div class="shead"><h2 id="sheetTitle">${d.getMonth()+1} 月 ${d.getDate()} 日（${WD[d.getDay()]}）</h2><button class="btn sm gold" data-act="close">完成</button></div>
+  <div class="sbody">
+    <label class="dblday${dbl?' on':''}" id="dblWrap"><input type="checkbox" id="dblDay" ${dbl?'checked':''}>${fishSvg()}<span><b>整天雙倍薪</b><br><small class="muted">國定假日、特休加班等。也可以只把某一班設 ×2。</small></span></label>
+    ${S.jobs.length?rows:`<div class="card empty"><p>還沒有工作，先新增一份吧。</p><button class="btn gold" data-act="job-new">新增工作</button></div>`}
+    <label class="field"><span>備註</span><textarea class="inp" id="dayNote" maxlength="500" placeholder="例如：代班、提早下班">${esc((mo&&mo.note&&mo.note[ds])||'')}</textarea></label>
+    <div class="daytotal"><span class="muted">這天收入（未扣勞健保）</span><b class="num" id="dayTotal">${money(dayEarn(ds))}</b></div>
+  </div>`);
+}
+function refreshDay(){
+  if(!sheetCtx||sheetCtx.type!=='day')return;const ds=sheetCtx.ds;const mo=monthOf(ds);
+  $('#dayTotal').textContent=money(dayEarn(ds));
+  const dbl=!!(mo&&mo.dbl&&mo.dbl[ds]);$('#dblWrap').classList.toggle('on',dbl);
+  document.querySelectorAll('#sheet .x2').forEach(b=>{const s=mo&&mo.days&&mo.days[ds]&&mo.days[ds][b.dataset.j];b.setAttribute('aria-pressed',multOf(mo,ds,s)===2);});
+  render();
+}
+function setHours(ds,jid,h,writeInput){
+  h=Math.max(0,Math.min(24,Math.round((+h||0)*100)/100));
+  const ym=ds.slice(0,7);const mo=ensureMonth(ym);mo.days=mo.days||{};
+  const day=mo.days[ds]||(mo.days[ds]={});const s=day[jid]||(day[jid]={h:0});s.h=h;
+  if(writeInput){const i=document.getElementById('h-'+jid);if(i)i.value=h||'';}
+  touchMonth(ym);refreshDay();
+}
+function toggleX2(ds,jid){
+  const ym=ds.slice(0,7);const mo=ensureMonth(ym);mo.days=mo.days||{};
+  const day=mo.days[ds]||(mo.days[ds]={});const s=day[jid]||(day[jid]={h:0});
+  const next=multOf(mo,ds,s)===2?1:2;const def=mo.dbl&&mo.dbl[ds]?2:1;
+  if(next===def)delete s.m;else s.m=next;
+  touchMonth(ym);refreshDay();
+}
+function setDayDouble(ds,on){
+  const ym=ds.slice(0,7);const mo=ensureMonth(ym);mo.dbl=mo.dbl||{};
+  if(on)mo.dbl[ds]=true;else delete mo.dbl[ds];
+  const day=mo.days&&mo.days[ds];if(day)for(const id in day)delete day[id].m;
+  touchMonth(ym);refreshDay();
+}
+
+function levelOpts(table,sel,ptMax){return table.map(v=>`<option value="${v}"${+sel===v?' selected':''}>${comma(v)}${ptMax&&v<=ptMax?'（部分工時）':''}</option>`).join('');}
+function openJob(id){
+  const j=id?jobById(id):null;
+  const v=j||{name:'',color:COLORS[S.jobs.length%COLORS.length],wage:196,cycleStart:1,payOffset:1,payDay:5,labor:{on:true,mode:'auto',amount:29500},health:{on:false,mode:'auto',amount:29500,deps:0}};
+  sheetCtx={type:'job',id:j?j.id:null,confirm:false};
+  const cyc=Array.from({length:28},(_,i)=>i+1).map(n=>`<option value="${n}"${+v.cycleStart===n?' selected':''}>${n===1?'每月 1 日～月底':`每月 ${n} 日～隔月 ${n-1} 日`}</option>`).join('');
+  openSheet(`<div class="shead"><h2 id="sheetTitle">${j?'編輯工作':'新增工作'}</h2><button class="btn sm ghost" data-act="close">取消</button></div>
+  <form class="sbody" id="jobForm" novalidate>
+    <label class="field"><span>工作名稱</span><input class="inp" id="jName" maxlength="30" value="${esc(v.name)}" placeholder="例如：便利商店" required></label>
+    <div class="field"><span>顏色</span><div class="colors">${COLORS.map(c=>`<label title="${COLOR_NAMES[c]}"><input type="radio" name="jColor" id="jColor-${c}" value="${c}"${v.color===c?' checked':''}><span style="--c:var(--${c})"></span></label>`).join('')}</div></div>
+    <div class="fgrid">
+      <label class="field"><span>時薪（元）</span><input class="inp num" id="jWage" type="number" inputmode="decimal" min="0" step="1" value="${v.wage}"><span class="err" id="jWageErr" hidden>時薪要大於 0</span></label>
+      <label class="field"><span>計薪區間</span><select class="inp" id="jCycle">${cyc}</select></label>
+      <label class="field"><span>發薪月份</span><select class="inp" id="jPayOff">${['當月','下個月','下下個月'].map((t,i)=>`<option value="${i}"${+v.payOffset===i?' selected':''}>區間結束的${t}</option>`).join('')}</select></label>
+      <label class="field"><span>發薪日</span><input class="inp num" id="jPayDay" type="number" min="1" max="31" value="${v.payDay}"></label>
+    </div>
+    <div class="ins">
+      <label class="switch"><input type="checkbox" id="jLaborOn" ${v.labor.on?'checked':''}>在這份工作加保勞保</label>
+      <div class="fgrid" id="laborBox"><label class="field"><span>投保金額</span><select class="inp" id="jLaborMode"><option value="auto"${v.labor.mode!=='fixed'?' selected':''}>依當期薪資自動對應級距</option>${levelOpts(LABOR,v.labor.mode==='fixed'?v.labor.amount:0,LABOR_PT_MAX)}</select></label></div>
+      <div class="preview num" id="laborPrev"></div>
+    </div>
+    <div class="ins">
+      <label class="switch"><input type="checkbox" id="jHealthOn" ${v.health.on?'checked':''}>在這份工作加保健保</label>
+      <div class="fgrid" id="healthBox"><label class="field"><span>投保金額</span><select class="inp" id="jHealthMode"><option value="auto"${v.health.mode!=='fixed'?' selected':''}>依當期薪資自動對應級距</option>${levelOpts(HEALTH,v.health.mode==='fixed'?v.health.amount:0)}</select></label>
+      <label class="field"><span>眷屬人數</span><select class="inp" id="jDeps">${[0,1,2,3].map(n=>`<option value="${n}"${+v.health.deps===n?' selected':''}>${n===3?'3 人以上':n+' 人'}</option>`).join('')}</select></label></div>
+      <div class="preview num" id="healthPrev"></div>
+    </div>
+    <div id="delBox"></div>
+    <div class="sfoot">${j?`<button type="button" class="btn danger sm" data-act="job-del">刪除這份工作</button>`:'<span></span>'}<button type="submit" class="btn gold">儲存</button></div>
+  </form>`);
+  jobPreview();
+}
+function jobPreview(){
+  const r=S.rates;const lo=$('#jLaborOn').checked,ho=$('#jHealthOn').checked;
+  $('#laborBox').hidden=!lo;$('#healthBox').hidden=!ho;
+  const lm=$('#jLaborMode').value,hm=$('#jHealthMode').value,deps=+$('#jDeps').value;
+  const wage=+$('#jWage').value||0;const est=Math.round(wage*80);
+  const lp=$('#laborPrev'),hp=$('#healthPrev');lp.hidden=!lo;hp.hidden=!ho;
+  if(lo){if(lm==='auto'){const ins=bracket(LABOR,est);lp.textContent=`例：當期薪資 ${comma(est)}（約 80 小時）→ 投保 ${comma(ins)}，勞保自付 ${comma(laborFee(ins,r))} 元`;}
+    else lp.textContent=`每期勞保自付 ${comma(laborFee(+lm,r))} 元`;}
+  if(ho){const mul=1+Math.min(deps,3);if(hm==='auto'){const ins=bracket(HEALTH,est);hp.textContent=`例：當期薪資 ${comma(est)} → 投保 ${comma(ins)}，健保自付 ${comma(healthFee(ins,deps,r))} 元${mul>1?`（含眷屬 ×${mul}）`:''}`;}
+    else hp.textContent=`每期健保自付 ${comma(healthFee(+hm,deps,r))} 元${mul>1?`（含眷屬 ×${mul}）`:''}`;}
+}
+function submitJob(){
+  const name=$('#jName').value.trim();const wage=+$('#jWage').value;
+  $('#jWageErr').hidden=wage>0;
+  if(!name){$('#jName').focus();$('#jName').placeholder='請填工作名稱';return;}
+  if(!(wage>0)){$('#jWage').focus();return;}
+  const old=sheetCtx.id?jobById(sheetCtx.id):null;
+  const lm=$('#jLaborMode').value,hm=$('#jHealthMode').value;
+  const job={id:old?old.id:'j'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,
+    color:(document.querySelector('input[name=jColor]:checked')||{}).value||'p1',wage,
+    cycleStart:+$('#jCycle').value,payOffset:+$('#jPayOff').value,payDay:Math.min(31,Math.max(1,parseInt($('#jPayDay').value,10)||1)),
+    labor:{on:$('#jLaborOn').checked,mode:lm==='auto'?'auto':'fixed',amount:lm==='auto'?0:+lm},
+    health:{on:$('#jHealthOn').checked,mode:hm==='auto'?'auto':'fixed',amount:hm==='auto'?0:+hm,deps:+$('#jDeps').value},
+    created:old?old.created:Date.now()};
+  closeSheet();saveJob(job);toast(old?'已更新工作':'已新增工作');
+}
+
+let toastT;function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3200);}
+function setTab(t){S.tab=t;try{localStorage.setItem('salary-tab',t);}catch(e){}render();window.scrollTo(0,0);}
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  switch(a){
+    case 'tab':setTab(b.dataset.tab);break;
+    case 'day':openDay(b.dataset.d);break;
+    case 'close':closeSheet();break;
+    case 'cal-prev':[S.calY,S.calM]=addMonth(S.calY,S.calM,-1);render();break;
+    case 'cal-next':[S.calY,S.calM]=addMonth(S.calY,S.calM,1);render();break;
+    case 'cal-today':S.calY=now.getFullYear();S.calM=now.getMonth()+1;render();break;
+    case 'year-prev':S.statY--;render();break;
+    case 'year-next':S.statY++;render();break;
+    case 'step':{const ds=sheetCtx.ds,j=b.dataset.j;const mo=monthOf(ds);const cur=+(mo&&mo.days&&mo.days[ds]&&mo.days[ds][j]&&mo.days[ds][j].h)||0;setHours(ds,j,cur+ +b.dataset.v,true);break;}
+    case 'x2':toggleX2(sheetCtx.ds,b.dataset.j);break;
+    case 'job-new':openJob(null);break;
+    case 'job-edit':openJob(b.dataset.j);break;
+    case 'job-del':$('#delBox').innerHTML=`<div class="confirm"><span>刪除後，這份工作的排班也不會再計算。</span><button type="button" class="btn sm danger" data-act="job-del-yes">確定刪除</button><button type="button" class="btn sm" data-act="job-del-no">先不要</button></div>`;break;
+    case 'job-del-no':$('#delBox').innerHTML='';break;
+    case 'job-del-yes':{const id=sheetCtx.id;closeSheet();removeJob(id);toast('已刪除工作');break;}
+    case 'sample':loadSample();break;
+    case 'rates-reset':S.rates={...DEF_RATES};saveRates();break;
+  }
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id&&t.id.startsWith('h-')&&sheetCtx&&sheetCtx.type==='day'){let v=+t.value;if(v>24){v=24;t.value=24;}setHours(sheetCtx.ds,t.dataset.j,v,false);}
+  else if(t.id==='dayNote'&&sheetCtx){const ym=sheetCtx.ds.slice(0,7);const mo=ensureMonth(ym);mo.note=mo.note||{};mo.note[sheetCtx.ds]=t.value;touchMonth(ym);}
+  else if(t.closest&&t.closest('#jobForm'))jobPreview();
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='dblDay'&&sheetCtx)setDayDouble(sheetCtx.ds,t.checked);
+  else if(t.closest&&t.closest('#jobForm'))jobPreview();
+  else if(/^r(Labor|Health)(Rate|Share)$/.test(t.id)){const k=t.id[1].toLowerCase()+t.id.slice(2);const v=+t.value;if(v>=0&&v<=100){S.rates={...S.rates,[k]:v};saveRates();}else toast('費率要在 0～100 之間');}
+});
+document.addEventListener('submit',e=>{if(e.target.id==='jobForm'){e.preventDefault();submitJob();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheetCtx)closeSheet();});
+try{const t=localStorage.getItem('salary-tab');if(['home','cal','jobs','stats'].includes(t))S.tab=t;}catch(e){}
+init();
+</script>

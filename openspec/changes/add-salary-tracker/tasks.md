@@ -24,7 +24,7 @@
 
 ## 5. 整合驗證
 
-- [ ] 5.1 用 `openspec validate add-salary-tracker` 確認文件有效，發佈 Artifact 並在預覽中檢查一次版面（桌機／手機、淺色／深色）
+- [ ] 5.1 用 `openspec validate add-salary-tracker` 確認文件有效，發佈 Artifact 並在預覽中檢查一次版面（桌機／手機；只有淺色畫面）
 
 ## 6. GitHub Pages 與本機保存
 
